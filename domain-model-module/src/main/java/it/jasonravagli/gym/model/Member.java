@@ -1,23 +1,11 @@
 package it.jasonravagli.gym.model;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
 
-public class Member {
-	private UUID id;
+public class Member extends BaseEntity {
 	private String name;
 	private String surname;
 	private LocalDate dateOfBirth;
-	private List<Course> subscriptions;
-
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(UUID id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -43,11 +31,8 @@ public class Member {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	public List<Course> getSubscriptions() {
-		return subscriptions;
-	}
-
-	public void setSubscriptions(List<Course> subscriptions) {
-		this.subscriptions = subscriptions;
+	@Override
+	public String toString() {
+		return surname + " " + name + " - " + dateOfBirth;
 	}
 }
