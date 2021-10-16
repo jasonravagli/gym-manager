@@ -1,20 +1,10 @@
 package it.jasonravagli.gym.model;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 
-public class Course {
-	private UUID id;
+public class Course extends BaseEntity {
 	private String name;
-	private List<Member> subscribers;
-
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(UUID id) {
-		this.id = id;
-	}
+	private Set<Member> subscribers;
 
 	public String getName() {
 		return name;
@@ -24,11 +14,16 @@ public class Course {
 		this.name = name;
 	}
 
-	public List<Member> getSubscribers() {
+	public Set<Member> getSubscribers() {
 		return subscribers;
 	}
 
-	public void setSubscribers(List<Member> subscribers) {
+	public void setSubscribers(Set<Member> subscribers) {
 		this.subscribers = subscribers;
+	}
+
+	@Override
+	public String toString() {
+		return name + " - subscribers=" + (subscribers == null? 0 : subscribers.size());
 	}
 }
