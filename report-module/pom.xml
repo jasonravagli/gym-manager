@@ -69,6 +69,12 @@
                 </goals>
               </execution>
             </executions>
+            <!-- JaCoCo reports are generated from report-aggregate, hence they are not in the default directory  -->
+            <configuration>
+              <jacocoReports>
+                <jacocoReport>${project.reporting.outputDirectory}/jacoco-aggregate/jacoco.xml</jacocoReport>
+              </jacocoReports>
+            </configuration>
           </plugin>
         </plugins>
       </build>
