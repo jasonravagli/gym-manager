@@ -6,7 +6,8 @@ public class ExampleTest {
 
 	@Test
 	public void test() {
-
+		Example ex = new Example();
+		ex.example();
 	}
 
 }
