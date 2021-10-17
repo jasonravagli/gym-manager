@@ -74,6 +74,10 @@
               <jacocoReports>
                 <jacocoReport>${project.reporting.outputDirectory}/jacoco-aggregate/jacoco.xml</jacocoReport>
               </jacocoReports>
+              <!-- Source files of the modules are not automatically detected -->
+              <sourceDirectories>
+                <sourceDirectory>${project.basedir}/../logic-module/src/main/java</sourceDirectory>
+              </sourceDirectories>
             </configuration>
           </plugin>
         </plugins>
