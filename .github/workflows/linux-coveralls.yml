@@ -1,4 +1,4 @@
-name: CI with Maven and Coveralls in Linux
+name: CI with Maven, Coveralls, and PIT in Linux
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     env:
       workdir: aggregator-module
 
-    name: Build with Java 8 and Coveralls on Linux
+    name: Build with Java 8, Coveralls, and PIT on Linux
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 8
@@ -24,7 +24,7 @@ jobs:
         key: ${{ runner.os }}-m2-jdk8-${{ hashFiles('**/pom.xml', '**/linux-coveralls.yml') }}
         restore-keys: ${{ runner.os }}-m2-jdk8-
     - name: Build with Maven
-      run: mvn verify -Pcoveralls -DrepoToken=$COVERALLS_REPO_TOKEN -DpullRequest=${{ github.event.pull_request.number }}
+      run: mvn verify -Pcoveralls,pit -DrepoToken=$COVERALLS_REPO_TOKEN -DpullRequest=${{ github.event.pull_request.number }}
       working-directory: ${{ env.workdir }}
       env: 
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
@@ -37,4 +37,6 @@ jobs:
       if: ${{ always() }}
       with:
         name: reports
-        path: '**/target/site'
+        path: |
+          **/target/site
+          **/target/pit-reports
