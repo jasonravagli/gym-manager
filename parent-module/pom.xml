@@ -87,8 +87,8 @@
 					<executions>
 						<execution>
 							<goals>
-								<!-- binds by default to the phase "initialize" -->
 								<goal>prepare-agent</goal>
+								<goal>report</goal>
 							</goals>
 						</execution>
 					</executions>

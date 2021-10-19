@@ -7,11 +7,49 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
+	<name>${projectName}</name>
+
 	<modules>
 		<module>../parent-module</module>
 		<module>../domain-model-module</module>
 		<module>../logic-module</module>
 	</modules>
+
+	<properties>
+		<projectName>gym-manager</projectName>
+		
+		<!-- SONARQUBE CONFIGURATION -->
+		<sonar.projectKey>default-project</sonar.projectKey>
+		<!-- Exclude the domain model from code coverage -->
+		<sonar.coverage.exclusions>
+			**/domain-model-module/**
+		</sonar.coverage.exclusions>
+		<!-- Rule exclusions -->
+		<!-- Ignore Subclasses that add fields should override "equals" for domain model classes -->
+		<sonar.issue.ignore.multicriteria>e11</sonar.issue.ignore.multicriteria>
+		<sonar.issue.ignore.multicriteria.e11.ruleKey>
+			java:S2160
+		</sonar.issue.ignore.multicriteria.e11.ruleKey>
+		<sonar.issue.ignore.multicriteria.e11.resourceKey>
+			**/domain-model-module/**/*.java
+		</sonar.issue.ignore.multicriteria.e11.resourceKey>
+	</properties>
+
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!-- SONARQUBE PLUGIN -->
+				<!-- SonarQube is meant to be used from the root context of the build, 
+					hence must be configured in the aggregator project -->
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>3.9.0.2155</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
 	<profiles>
 		<profile>
