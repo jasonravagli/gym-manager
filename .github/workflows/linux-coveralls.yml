@@ -33,6 +33,7 @@ jobs:
         mvn verify -Pcoveralls,pit sonar:sonar
         -DrepoToken=$COVERALLS_TOKEN -DpullRequest=${{ github.event.pull_request.number }}
         -Dsonar.organization=jasonravagli-github -Dsonar.host.url=https://sonarcloud.io
+        -Dsonar.projectKey=jasonravagli_gym-manager
       working-directory: ${{ env.workdir }}
       env: 
         COVERALLS_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
