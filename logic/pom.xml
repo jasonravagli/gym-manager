@@ -4,9 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>it.jasonravagli.gym</groupId>
-		<artifactId>parent-module</artifactId>
+		<artifactId>parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../parent-module</relativePath>
+		<relativePath>../parent</relativePath>
 	</parent>
-	<artifactId>logic-module</artifactId>
+	<artifactId>logic</artifactId>
 </project>
