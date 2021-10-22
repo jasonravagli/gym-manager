@@ -39,10 +39,10 @@ public class GymControllerTest {
 
 	@Mock
 	private TransactionManager transactionManager;
-	
+
 	@InjectMocks
 	private RepositoryProvider repositoryProvider;
-	
+
 	@InjectMocks
 	private GymController gymController;
 
@@ -111,13 +111,13 @@ public class GymControllerTest {
 		setupTransactionManagerToExecuteCode();
 
 		gymController.addMember(member);
-		
+
 		InOrder inOrder = Mockito.inOrder(transactionManager, memberRepository, gymView);
 		inOrder.verify(transactionManager).doInTransaction(any());
 		inOrder.verify(memberRepository).save(member);
 		inOrder.verify(gymView).memberAdded(member);
 	}
-	
+
 	@Test
 	public void testAddMemberWhenMemberAlreadyExists() {
 		UUID existingId = UUID.randomUUID();
@@ -136,17 +136,17 @@ public class GymControllerTest {
 		verify(gymView).showError("A member with id " + existingId + " already exists");
 		verifyNoMoreInteractions(memberRepository, gymView);
 	}
-	
+
 	@Test
 	public void testAddMemberWhenExceptionIsThrownDuringTransaction() {
 		setupTransactionManagerToThrowException(EXCEPTION_MESSAGE);
-		
+
 		gymController.addMember(new Member());
-		
+
 		verify(gymView).showError(EXCEPTION_MESSAGE);
 		verifyNoMoreInteractions(gymView);
 	}
-	
+
 	@Test
 	public void testDeleteMemberWhenMemberExists() {
 		UUID idMember = UUID.randomUUID();
@@ -154,15 +154,15 @@ public class GymControllerTest {
 		member.setId(idMember);
 		when(memberRepository.findById(idMember)).thenReturn(member);
 		setupTransactionManagerToExecuteCode();
-		
+
 		gymController.deleteMember(member);
-		
+
 		InOrder inOrder = Mockito.inOrder(transactionManager, memberRepository, gymView);
 		inOrder.verify(transactionManager).doInTransaction(any());
 		inOrder.verify(memberRepository).deleteById(idMember);
 		inOrder.verify(gymView).memberDeleted(member);
 	}
-	
+
 	@Test
 	public void testDeleteMemberWhenMemberDoesNotExist() {
 		UUID idMember = UUID.randomUUID();
@@ -170,24 +170,24 @@ public class GymControllerTest {
 		member.setId(idMember);
 		when(memberRepository.findById(idMember)).thenReturn(null);
 		setupTransactionManagerToExecuteCode();
-		
+
 		gymController.deleteMember(member);
-		
+
 		verify(memberRepository).findById(idMember);
 		verify(gymView).showError("Member with id " + idMember + " does not exist");
 		verifyNoMoreInteractions(memberRepository, gymView);
 	}
-	
+
 	@Test
 	public void testDeleteMemberWhenExceptionIsThrownDuringTransaction() {
 		setupTransactionManagerToThrowException(EXCEPTION_MESSAGE);
-		
+
 		gymController.deleteMember(new Member());
-		
+
 		verify(gymView).showError(EXCEPTION_MESSAGE);
 		verifyNoMoreInteractions(gymView);
 	}
-	
+
 	@Test
 	public void testUpdateMemberWhenMemberExists() {
 		UUID idMember = UUID.randomUUID();
@@ -197,15 +197,15 @@ public class GymControllerTest {
 		updatedMember.setId(idMember);
 		when(memberRepository.findById(idMember)).thenReturn(existingMember);
 		setupTransactionManagerToExecuteCode();
-		
+
 		gymController.updateMember(updatedMember);
-		
+
 		InOrder inOrder = Mockito.inOrder(transactionManager, memberRepository, gymView);
 		inOrder.verify(transactionManager).doInTransaction(any());
 		inOrder.verify(memberRepository).update(updatedMember);
 		inOrder.verify(gymView).memberUpdated(updatedMember);
 	}
-	
+
 	@Test
 	public void testUpdateMemberWhenMemberDoesNotExist() {
 		UUID idMember = UUID.randomUUID();
@@ -213,25 +213,25 @@ public class GymControllerTest {
 		updatedMember.setId(idMember);
 		when(memberRepository.findById(idMember)).thenReturn(null);
 		setupTransactionManagerToExecuteCode();
-		
+
 		gymController.updateMember(updatedMember);
-		
+
 		verify(transactionManager).doInTransaction(any());
 		verify(memberRepository).findById(idMember);
 		verify(gymView).showError("Member with id " + idMember + " does not exist");
 		verifyNoMoreInteractions(memberRepository, gymView);
 	}
-	
+
 	@Test
 	public void testUpdateMemberWhenExceptionIsThrownDuringTransaction() {
 		setupTransactionManagerToThrowException(EXCEPTION_MESSAGE);
-		
+
 		gymController.updateMember(new Member());
-		
+
 		verify(gymView).showError(EXCEPTION_MESSAGE);
 		verifyNoMoreInteractions(gymView);
 	}
-	
+
 	@Test
 	public void testAddCourseWhenCourseDoesNotExist() {
 		UUID idCourse = UUID.randomUUID();
@@ -239,44 +239,44 @@ public class GymControllerTest {
 		course.setId(idCourse);
 		when(courseRepository.findById(idCourse)).thenReturn(null);
 		setupTransactionManagerToExecuteCode();
-		
+
 		gymController.addCourse(course);
-		
+
 		InOrder inOrder = Mockito.inOrder(transactionManager, courseRepository, gymView);
 		inOrder.verify(transactionManager).doInTransaction(any());
 		inOrder.verify(courseRepository).save(course);
 		inOrder.verify(gymView).courseAdded(course);
 	}
-	
+
 	@Test
 	public void testAddCourseWhenCourseAlreadyExists() {
 		UUID existingId = UUID.randomUUID();
 		Course existingCourse = new Course();
 		existingCourse.setId(existingId);
 		when(courseRepository.findById(existingId)).thenReturn(existingCourse);
-		
+
 		Course newCourse = new Course();
 		newCourse.setId(existingId);
 		setupTransactionManagerToExecuteCode();
-		
+
 		gymController.addCourse(newCourse);
-		
+
 		verify(transactionManager).doInTransaction(any());
 		verify(courseRepository).findById(existingId);
 		verify(gymView).showError("A course with id " + existingId + " already exists");
 		verifyNoMoreInteractions(courseRepository, gymView);
 	}
-	
+
 	@Test
 	public void testAddCourseWhenExceptionIsThrownDuringTransaction() {
 		setupTransactionManagerToThrowException(EXCEPTION_MESSAGE);
-		
+
 		gymController.addCourse(new Course());
-		
+
 		verify(gymView).showError(EXCEPTION_MESSAGE);
 		verifyNoMoreInteractions(gymView);
 	}
-	
+
 	@Test
 	public void testDeleteCourseWhenCourseExists() {
 		UUID idCourse = UUID.randomUUID();
@@ -284,15 +284,15 @@ public class GymControllerTest {
 		course.setId(idCourse);
 		when(courseRepository.findById(idCourse)).thenReturn(course);
 		setupTransactionManagerToExecuteCode();
-		
+
 		gymController.deleteCourse(course);
-		
+
 		InOrder inOrder = Mockito.inOrder(transactionManager, courseRepository, gymView);
 		inOrder.verify(transactionManager).doInTransaction(any());
 		inOrder.verify(courseRepository).deleteById(idCourse);
 		inOrder.verify(gymView).courseDeleted(course);
 	}
-	
+
 	@Test
 	public void testDeleteCourseWhenCourseDoesNotExists() {
 		UUID idCourse = UUID.randomUUID();
@@ -300,44 +300,44 @@ public class GymControllerTest {
 		course.setId(idCourse);
 		when(courseRepository.findById(idCourse)).thenReturn(null);
 		setupTransactionManagerToExecuteCode();
-		
+
 		gymController.deleteCourse(course);
-		
+
 		verify(transactionManager).doInTransaction(any());
 		verify(courseRepository).findById(idCourse);
 		verify(gymView).showError("Course with id " + idCourse + " does not exist");
 		verifyNoMoreInteractions(courseRepository, gymView);
 	}
-	
+
 	@Test
 	public void testDeleteCourseWhenExceptionIsThrownDuringTransaction() {
 		setupTransactionManagerToThrowException(EXCEPTION_MESSAGE);
-		
+
 		gymController.deleteCourse(new Course());
-		
+
 		verify(gymView).showError(EXCEPTION_MESSAGE);
 		verifyNoMoreInteractions(gymView);
 	}
-	
+
 	@Test
 	public void testUpdateCourseWhenCourseExists() {
 		UUID existingId = UUID.randomUUID();
 		Course existingCourse = new Course();
 		existingCourse.setId(existingId);
 		when(courseRepository.findById(existingId)).thenReturn(existingCourse);
-		
+
 		Course updatedCourse = new Course();
 		updatedCourse.setId(existingId);
 		setupTransactionManagerToExecuteCode();
-		
+
 		gymController.updateCourse(updatedCourse);
-		
+
 		InOrder inOrder = Mockito.inOrder(transactionManager, courseRepository, gymView);
 		inOrder.verify(transactionManager).doInTransaction(any());
 		inOrder.verify(courseRepository).update(updatedCourse);
 		inOrder.verify(gymView).courseUpdated(updatedCourse);
 	}
-	
+
 	@Test
 	public void testUpdateCourseWhenCourseDoesNotExist() {
 		UUID idCourse = UUID.randomUUID();
@@ -345,21 +345,21 @@ public class GymControllerTest {
 		updatedCourse.setId(idCourse);
 		when(courseRepository.findById(idCourse)).thenReturn(null);
 		setupTransactionManagerToExecuteCode();
-		
+
 		gymController.updateCourse(updatedCourse);
-		
+
 		verify(transactionManager).doInTransaction(any());
 		verify(courseRepository).findById(idCourse);
 		verify(gymView).showError("Course with id " + idCourse + " does not exist");
 		verifyNoMoreInteractions(courseRepository, gymView);
 	}
-	
+
 	@Test
 	public void testUpdateCourseWhenExceptionIsThrownDuringTransaction() {
 		setupTransactionManagerToThrowException(EXCEPTION_MESSAGE);
-		
+
 		gymController.updateCourse(new Course());
-		
+
 		verify(gymView).showError(EXCEPTION_MESSAGE);
 		verifyNoMoreInteractions(gymView);
 	}
@@ -368,7 +368,7 @@ public class GymControllerTest {
 		when(transactionManager.doInTransaction(any()))
 				.thenAnswer(answer((TransactionCode<?> code) -> code.apply(repositoryProvider)));
 	}
-	
+
 	private void setupTransactionManagerToThrowException(String exceptionMessage) {
 		when(transactionManager.doInTransaction(any())).thenThrow(new RuntimeException(exceptionMessage));
 	}
