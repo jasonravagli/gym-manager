@@ -7,6 +7,11 @@ import it.jasonravagli.gym.model.Member;
 
 public class GymController {
 
+	private static final String NOT_EXISTING_COURSE_MSG_TEMPLATE = "Course with id %s does not exist";
+	private static final String EXISTING_COURSE_MSG_TEMPLATE = "A course with id %s already exists";
+	private static final String NOT_EXISTING_MEMBER_MSG_TEMPLATE = "Member with id %s does not exist";
+	private static final String EXISTING_MEMBER_MSG_TEMPLATE = "A member with id %s already exists";
+
 	private GymView gymView;
 	private TransactionManager transactionManager;
 
@@ -20,7 +25,7 @@ public class GymController {
 			List<Member> members = transactionManager
 					.doInTransaction(repositoryProvider -> repositoryProvider.getMemberRepository().findAll());
 			gymView.showMembers(members);
-		} catch (RuntimeException e) {
+		} catch (TransactionException e) {
 			gymView.showError(e.getMessage());
 		}
 	}
@@ -30,7 +35,7 @@ public class GymController {
 			List<Course> courses = transactionManager
 					.doInTransaction(repositoryProvider -> repositoryProvider.getCourseRepository().findAll());
 			gymView.showCourses(courses);
-		} catch (RuntimeException e) {
+		} catch (TransactionException e) {
 			gymView.showError(e.getMessage());
 		}
 	}
@@ -40,7 +45,7 @@ public class GymController {
 			transactionManager.doInTransaction(repositoryProvider -> {
 				MemberRepository memberRepository = repositoryProvider.getMemberRepository();
 				if (memberRepository.findById(member.getId()) != null) {
-					gymView.showError("A member with id " + member.getId() + " already exists");
+					gymView.showError(String.format(EXISTING_MEMBER_MSG_TEMPLATE, member.getId()));
 					return null;
 				}
 
@@ -48,7 +53,7 @@ public class GymController {
 				gymView.memberAdded(member);
 				return null;
 			});
-		} catch (RuntimeException e) {
+		} catch (TransactionException e) {
 			gymView.showError(e.getMessage());
 		}
 	}
@@ -58,14 +63,14 @@ public class GymController {
 			transactionManager.doInTransaction(repositoryProvider -> {
 				MemberRepository memberRepository = repositoryProvider.getMemberRepository();
 				if (memberRepository.findById(member.getId()) == null) {
-					gymView.showError("Member with id " + member.getId() + " does not exist");
+					gymView.showError(String.format(NOT_EXISTING_MEMBER_MSG_TEMPLATE, member.getId()));
 					return null;
 				}
 				repositoryProvider.getMemberRepository().deleteById(member.getId());
 				gymView.memberDeleted(member);
 				return null;
 			});
-		} catch (RuntimeException e) {
+		} catch (TransactionException e) {
 			gymView.showError(e.getMessage());
 		}
 	}
@@ -75,7 +80,7 @@ public class GymController {
 			transactionManager.doInTransaction(repositoryProvider -> {
 				MemberRepository memberRepository = repositoryProvider.getMemberRepository();
 				if (memberRepository.findById(member.getId()) == null) {
-					gymView.showError("Member with id " + member.getId() + " does not exist");
+					gymView.showError(String.format(NOT_EXISTING_MEMBER_MSG_TEMPLATE, member.getId()));
 					return null;
 				}
 
@@ -83,7 +88,7 @@ public class GymController {
 				gymView.memberUpdated(member);
 				return null;
 			});
-		} catch (RuntimeException e) {
+		} catch (TransactionException e) {
 			gymView.showError(e.getMessage());
 		}
 	}
@@ -93,14 +98,14 @@ public class GymController {
 			transactionManager.doInTransaction(repositoryprovider -> {
 				CourseRepository courseRepository = repositoryprovider.getCourseRepository();
 				if (courseRepository.findById(course.getId()) != null) {
-					gymView.showError("A course with id " + course.getId() + " already exists");
+					gymView.showError(String.format(EXISTING_COURSE_MSG_TEMPLATE, course.getId()));
 					return null;
 				}
 				courseRepository.save(course);
 				gymView.courseAdded(course);
 				return null;
 			});
-		} catch (RuntimeException e) {
+		} catch (TransactionException e) {
 			gymView.showError(e.getMessage());
 		}
 	}
@@ -110,14 +115,14 @@ public class GymController {
 			transactionManager.doInTransaction(repositoryProvider -> {
 				CourseRepository courseRepository = repositoryProvider.getCourseRepository();
 				if (courseRepository.findById(course.getId()) == null) {
-					gymView.showError("Course with id " + course.getId() + " does not exist");
+					gymView.showError(String.format(NOT_EXISTING_COURSE_MSG_TEMPLATE, course.getId()));
 					return null;
 				}
 				courseRepository.deleteById(course.getId());
 				gymView.courseDeleted(course);
 				return null;
 			});
-		} catch (RuntimeException e) {
+		} catch (TransactionException e) {
 			gymView.showError(e.getMessage());
 		}
 	}
@@ -127,14 +132,14 @@ public class GymController {
 			transactionManager.doInTransaction(repositoryProvider -> {
 				CourseRepository courseRepository = repositoryProvider.getCourseRepository();
 				if (courseRepository.findById(updatedCourse.getId()) == null) {
-					gymView.showError("Course with id " + updatedCourse.getId() + " does not exist");
+					gymView.showError(String.format(NOT_EXISTING_COURSE_MSG_TEMPLATE, updatedCourse.getId()));
 					return null;
 				}
 				courseRepository.update(updatedCourse);
 				gymView.courseUpdated(updatedCourse);
 				return null;
 			});
-		} catch (RuntimeException e) {
+		} catch (TransactionException e) {
 			gymView.showError(e.getMessage());
 		}
 	}

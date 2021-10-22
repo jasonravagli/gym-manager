@@ -370,7 +370,7 @@ public class GymControllerTest {
 	}
 
 	private void setupTransactionManagerToThrowException(String exceptionMessage) {
-		when(transactionManager.doInTransaction(any())).thenThrow(new RuntimeException(exceptionMessage));
+		when(transactionManager.doInTransaction(any())).thenThrow(new TransactionException(exceptionMessage));
 	}
 
 }
