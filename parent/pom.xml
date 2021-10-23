@@ -16,6 +16,9 @@
 		<junit.version>4.13.2</junit.version>
 		<assertj.version>3.21.0</assertj.version>
 		<mockito.version>4.0.0</mockito.version>
+		<mongo.version>3.12.10</mongo.version>
+
+		<docker.image.mongo>mongo:5.0.3</docker.image.mongo>
 	</properties>
 
 
@@ -30,6 +33,11 @@
 				<groupId>${project.groupId}</groupId>
 				<artifactId>logic</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mongodb</groupId>
+				<artifactId>mongo-java-driver</artifactId>
+				<version>${mongo.version}</version>
 			</dependency>
 
 			<!-- TEST DEPENDENCIES -->
@@ -72,7 +80,7 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				<!-- Lock Maven default plugins version -->
+				<!-- Lock Maven plugins version -->
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.8.1</version>
@@ -88,6 +96,19 @@
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.9.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>2.22.1</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 
 				<!-- JACOCO PLUGIN -->
@@ -139,8 +160,46 @@
 						<mutationThreshold>100</mutationThreshold>
 					</configuration>
 				</plugin>
+				<!-- BUILD HELPER PLUGIN -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>3.2.0</version>
+					<executions>
+						<execution>
+							<id>add-test-source</id>
+							<phase>generate-test-sources</phase>
+							<goals>
+								<goal>add-test-source</goal>
+							</goals>
+							<configuration>
+								<sources>
+									<source>src/it/java</source>
+								</sources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- DOCKER PLUGIN -->
+				<plugin>
+					<groupId>io.fabric8</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>0.34.1</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
+
+		<!-- Enabled plugins -->
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
 	</build>
 
 	<profiles>
