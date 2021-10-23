@@ -82,7 +82,9 @@ public class MongoMemberRepositoryIT {
 		memberCollection.insertMany(Stream.of(convertMemberToDbDocument(member1), convertMemberToDbDocument(member2))
 				.collect(Collectors.toList()));
 
-		assertThat(repository.findAll()).containsExactly(member1, member2);
+		List<Member> retrievedMembers = repository.findAll();
+		
+		assertThat(retrievedMembers).containsExactly(member1, member2);
 	}
 	
 	@Test

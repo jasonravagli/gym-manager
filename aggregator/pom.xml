@@ -13,27 +13,8 @@
 		<module>../parent</module>
 		<module>../domain-model</module>
 		<module>../logic</module>
+		<module>../mongodb</module>
 	</modules>
-
-	<properties>
-		<!-- SONARQUBE CONFIGURATION -->
-		<sonar.projectKey>default-project</sonar.projectKey>
-		<!-- Exclude the domain model from code coverage -->
-		<sonar.coverage.exclusions>
-			**/domain-model/**
-		</sonar.coverage.exclusions>
-		<!-- Rule exclusions -->
-		<!-- Ignore Subclasses that add fields should override "equals" for domain 
-			model classes -->
-		<sonar.issue.ignore.multicriteria>e11</sonar.issue.ignore.multicriteria>
-		<sonar.issue.ignore.multicriteria.e11.ruleKey>
-			java:S2160
-		</sonar.issue.ignore.multicriteria.e11.ruleKey>
-		<sonar.issue.ignore.multicriteria.e11.resourceKey>
-			**/domain-model/**/*.java
-		</sonar.issue.ignore.multicriteria.e11.resourceKey>
-	</properties>
-
 
 	<build>
 		<pluginManagement>
