@@ -9,4 +9,26 @@
 		<relativePath>../parent</relativePath>
 	</parent>
 	<artifactId>logic</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>domain-model</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<!-- Exclude RepositoryProvider from mutation since it contains no logic -->
+					<configuration>
+						<excludedClasses>it.jasonravagli.gym.logic.RepositoryProvider</excludedClasses>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>
