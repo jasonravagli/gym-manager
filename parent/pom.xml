@@ -129,6 +129,14 @@
 							</goals>
 						</execution>
 					</executions>
+					
+					<!-- Exclude class without logic from the coverage -->
+					<configuration>
+						<excludes>
+							<exclude>**/TransactionException.*</exclude>
+							<exclude>**/MongoRepositoryProvider.*</exclude>
+						</excludes>
+					</configuration>
 				</plugin>
 				<!-- COVERALLS PLUGIN -->
 				<plugin>

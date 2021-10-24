@@ -70,13 +70,5 @@ public class MongoMemberRepository implements MemberRepository {
 		return new Document().append("id", member.getId()).append("name", member.getName())
 				.append("surname", member.getSurname()).append("dateOfBirth", member.getDateOfBirth().toString());
 	}
-	
-	/**
-	 * Only for testing purposes
-	 * @return
-	 */
-	ClientSession getClientSession() {
-		return clientSession;
-	}
 
 }

@@ -54,12 +54,6 @@
 							</goals>
 						</execution>
 					</executions>
-					<!-- Exclude the MongoRepositoryProvider from coverage (it contains no logic) -->
-					<configuration>
-						<excludes>
-							<exclude>**/MongoRepositoryProvider.java</exclude>
-						</excludes>
-					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
