@@ -35,19 +35,17 @@ public class MongoMemberRepositoryIT {
 	private static final String MONGO_COLLECTION = "members";
 
 	// Get the docker container mapped port
-	private static int mongoPort = 27017;//Integer.parseInt(System.getProperty("mongo.port", "27017"));
+	private static int mongoPort = 27017;// Integer.parseInt(System.getProperty("mongo.port", "27017"));
 
 	private MongoClient client;
 	private ClientSession clientSession;
-	
+
 	private AutoCloseable closeable;
-	
+
 	@Spy
 	private MongoCollection<Document> memberCollection;
-	
+
 	private MongoMemberRepository repository;
-	
-	
 
 	@Before
 	public void setup() {
@@ -65,8 +63,8 @@ public class MongoMemberRepositoryIT {
 
 	@After
 	public void tearDown() throws Exception {
-		client.close();
 		clientSession.close();
+		client.close();
 		closeable.close();
 	}
 
@@ -83,14 +81,14 @@ public class MongoMemberRepositoryIT {
 				.collect(Collectors.toList()));
 
 		List<Member> retrievedMembers = repository.findAll();
-		
+
 		assertThat(retrievedMembers).containsExactly(member1, member2);
 	}
-	
+
 	@Test
 	public void testFindAllShouldUseClientSession() {
 		repository.findAll();
-		
+
 		verify(memberCollection).find(clientSession);
 	}
 
@@ -108,11 +106,11 @@ public class MongoMemberRepositoryIT {
 
 		assertThat(repository.findById(member2.getId())).isEqualTo(member2);
 	}
-	
+
 	@Test
 	public void testFindByIdShouldUseClientSession() {
 		repository.findById(UUID.randomUUID());
-		
+
 		verify(memberCollection).find(eq(clientSession), any(Bson.class));
 	}
 
@@ -124,13 +122,13 @@ public class MongoMemberRepositoryIT {
 
 		assertThat(readAllMembersFromDatabase()).containsExactly(member);
 	}
-	
+
 	@Test
 	public void testSaveShouldUseClientSession() {
 		Member member = createTestMember("test-name", "test-surname", LocalDate.of(1995, 4, 28));
-		
+
 		repository.save(member);
-		
+
 		verify(memberCollection).insertOne(eq(clientSession), any(Document.class));
 	}
 
@@ -145,11 +143,11 @@ public class MongoMemberRepositoryIT {
 
 		assertThat(readAllMembersFromDatabase()).containsExactly(member2);
 	}
-	
+
 	@Test
 	public void testDeleteByIdShouldUseClientSession() {
 		repository.deleteById(UUID.randomUUID());
-		
+
 		verify(memberCollection).deleteOne(eq(clientSession), any(Bson.class));
 	}
 
@@ -163,23 +161,19 @@ public class MongoMemberRepositoryIT {
 
 		repository.update(updatedMember);
 
-		List<Member> retrievedMembers = readAllMembersFromDatabase();
-		assertThat(retrievedMembers.size()).isEqualTo(1);
-		Member retrievedMember = retrievedMembers.get(0);
-		assertThat(retrievedMember.getId()).isEqualTo(updatedMember.getId());
-		assertThat(retrievedMember.getName()).isEqualTo(updatedMember.getName());
-		assertThat(retrievedMember.getSurname()).isEqualTo(updatedMember.getSurname());
-		assertThat(retrievedMember.getDateOfBirth()).isEqualTo(updatedMember.getDateOfBirth());
+		assertThat(readAllMembersFromDatabase()).containsExactly(updatedMember);		
 	}
-	
+
 	@Test
 	public void testUpdateShouldUseClientSession() {
 		Member updatedMember = createTestMember("updated-name", "updated-surname", LocalDate.of(1996, 10, 31));
-		
+
 		repository.update(updatedMember);
-		
+
 		verify(memberCollection).replaceOne(eq(clientSession), any(Bson.class), any(Document.class));
 	}
+	
+	// ----- Utility methods -----
 
 	private Member createTestMember(String name, String surname, LocalDate dateOfBirth) {
 		Member member = new Member();

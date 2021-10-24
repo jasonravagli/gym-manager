@@ -16,22 +16,22 @@ import it.jasonravagli.gym.logic.MemberRepository;
 import it.jasonravagli.gym.model.Member;
 
 public class MongoMemberRepository implements MemberRepository {
-	
+
 	private ClientSession clientSession;
 	private MongoCollection<Document> memberCollection;
 
 	public MongoMemberRepository(MongoCollection<Document> memberCollection) {
 		this.memberCollection = memberCollection;
 	}
-	
+
 	public void setClientSession(ClientSession clientSession) {
 		this.clientSession = clientSession;
 	}
 
 	@Override
 	public List<Member> findAll() {
-		return StreamSupport.stream(memberCollection.find(clientSession).spliterator(), false).map(this::documentToMember)
-				.collect(Collectors.toList());
+		return StreamSupport.stream(memberCollection.find(clientSession).spliterator(), false)
+				.map(this::documentToMember).collect(Collectors.toList());
 	}
 
 	@Override
