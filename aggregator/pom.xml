@@ -18,9 +18,10 @@
 
 	<properties>
 		<!-- SONARQUBE CONFIGURATION -->
-		<!-- Exclude the domain model from code coverage -->
+		<!-- Exclude the domain model and the other classes without logic from code coverage -->
 		<sonar.coverage.exclusions>
 			**/domain-model/**
+			**/mongodb/**/MongoRepositoryProvider.java
 		</sonar.coverage.exclusions>
 	</properties>
 

@@ -20,11 +20,8 @@ public class MongoMemberRepository implements MemberRepository {
 	private ClientSession clientSession;
 	private MongoCollection<Document> memberCollection;
 
-	public MongoMemberRepository(MongoCollection<Document> memberCollection) {
+	public MongoMemberRepository(MongoCollection<Document> memberCollection, ClientSession clientSession) {
 		this.memberCollection = memberCollection;
-	}
-
-	public void setClientSession(ClientSession clientSession) {
 		this.clientSession = clientSession;
 	}
 
@@ -72,6 +69,14 @@ public class MongoMemberRepository implements MemberRepository {
 	private Document memberToDocument(Member member) {
 		return new Document().append("id", member.getId()).append("name", member.getName())
 				.append("surname", member.getSurname()).append("dateOfBirth", member.getDateOfBirth().toString());
+	}
+	
+	/**
+	 * Only for testing purposes
+	 * @return
+	 */
+	ClientSession getClientSession() {
+		return clientSession;
 	}
 
 }

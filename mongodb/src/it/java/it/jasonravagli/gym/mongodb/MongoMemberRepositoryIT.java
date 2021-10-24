@@ -35,11 +35,11 @@ public class MongoMemberRepositoryIT {
 	private static final String MONGO_COLLECTION = "members";
 
 	// Get the docker container mapped port
-	private static int mongoPort = 27017;// Integer.parseInt(System.getProperty("mongo.port", "27017"));
+	private static int mongoPort = 27017; //Integer.parseInt(System.getProperty("mongo.port", "27017"));
 
 	private MongoClient client;
 	private ClientSession clientSession;
-
+	
 	private AutoCloseable closeable;
 
 	@Spy
@@ -57,8 +57,7 @@ public class MongoMemberRepositoryIT {
 		memberCollection = database.getCollection(MONGO_COLLECTION);
 		closeable = MockitoAnnotations.openMocks(this);
 
-		repository = new MongoMemberRepository(memberCollection);
-		repository.setClientSession(clientSession);
+		repository = new MongoMemberRepository(memberCollection, clientSession);
 	}
 
 	@After
