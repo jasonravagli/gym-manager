@@ -41,7 +41,7 @@ jobs:
       run: mvn install
       working-directory: ${{ env.workdir }}
     - name: Generate JUnit Report
-      run: mvn surefire-report:report-only site:site -DgenerateReports=false
+      run: mvn surefire-report:report-only surefire-report:failsafe-report-only site:site -DgenerateReports=false
       working-directory: ${{ env.workdir }}
       if: ${{ always() }}
     - name: Archive JUnit Report
