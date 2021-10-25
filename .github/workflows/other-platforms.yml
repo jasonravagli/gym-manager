@@ -29,8 +29,8 @@ jobs:
       with:
         java-version: ${{ matrix.java }}
     - name: Install Docker on MacOS
+      if: runner.os == 'macOS'
       uses: docker-practice/actions-setup-docker@master
-      if: ${{ runner.os }} == 'macOS'
     - name: Cache Maven packages
       uses: actions/cache@v2
       with:
