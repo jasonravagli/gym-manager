@@ -28,6 +28,9 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: ${{ matrix.java }}
+    - name: Install Docker on MacOS
+      if: runner.os == 'macOS'
+      uses: docker-practice/actions-setup-docker@master
     - name: Cache Maven packages
       uses: actions/cache@v2
       with:
@@ -41,7 +44,7 @@ jobs:
       run: mvn install
       working-directory: ${{ env.workdir }}
     - name: Generate JUnit Report
-      run: mvn surefire-report:report-only site:site -DgenerateReports=false
+      run: mvn surefire-report:report-only surefire-report:failsafe-report-only site:site -DgenerateReports=false
       working-directory: ${{ env.workdir }}
       if: ${{ always() }}
     - name: Archive JUnit Report

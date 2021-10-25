@@ -8,4 +8,8 @@ public class TransactionException extends RuntimeException {
 		super(message);
 	}
 	
+	public TransactionException(String message, Throwable cause) {
+		super(message, cause);
+	}
+	
 }

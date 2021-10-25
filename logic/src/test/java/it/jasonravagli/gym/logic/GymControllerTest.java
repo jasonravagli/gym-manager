@@ -40,7 +40,7 @@ public class GymControllerTest {
 	@Mock
 	private TransactionManager transactionManager;
 
-	@InjectMocks
+	@Mock
 	private RepositoryProvider repositoryProvider;
 
 	@InjectMocks
@@ -49,6 +49,9 @@ public class GymControllerTest {
 	@Before
 	public void setup() {
 		closeable = MockitoAnnotations.openMocks(this);
+		
+		when(repositoryProvider.getMemberRepository()).thenReturn(memberRepository);
+		when(repositoryProvider.getCourseRepository()).thenReturn(courseRepository);
 	}
 
 	@After
