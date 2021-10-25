@@ -32,7 +32,7 @@ public class MongoTransactionManagerIT {
 	private static final String MONGO_COLLECTION = "test_collection";
 
 	// Get the docker container mapped port
-	private static int mongoPort = 27017; //Integer.parseInt(System.getProperty("mongo.port", "27017"));
+	private static int mongoPort = Integer.parseInt(System.getProperty("mongo.port", "27017"));
 
 	private AutoCloseable autoCloseable;
 
