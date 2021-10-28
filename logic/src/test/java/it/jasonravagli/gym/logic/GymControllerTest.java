@@ -43,12 +43,15 @@ public class GymControllerTest {
 	@Mock
 	private RepositoryProvider repositoryProvider;
 
-	@InjectMocks
 	private GymController gymController;
 
 	@Before
 	public void setup() {
 		closeable = MockitoAnnotations.openMocks(this);
+		
+		gymController = new GymController();
+		gymController.setTransactoinManager(transactionManager);
+		gymController.setView(gymView);
 		
 		when(repositoryProvider.getMemberRepository()).thenReturn(memberRepository);
 		when(repositoryProvider.getCourseRepository()).thenReturn(courseRepository);
