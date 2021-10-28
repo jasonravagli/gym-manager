@@ -22,6 +22,8 @@ import net.miginfocom.swing.MigLayout;
 
 public class SwingDialogManageMember extends JFrame implements DialogManageMember {
 
+	private static final String UNSUPPORTED_OP_MESSAGE = "Operation not supported";
+
 	private static final long serialVersionUID = -7493514996863733430L;
 
 	private final JPanel contentPanel = new JPanel();
@@ -32,7 +34,7 @@ public class SwingDialogManageMember extends JFrame implements DialogManageMembe
 	private DatePicker datePickerBirth;
 	private DialogResult result;
 
-	private Member member;
+	private transient Member member;
 
 	private JButton buttonOk;
 
@@ -126,15 +128,12 @@ public class SwingDialogManageMember extends JFrame implements DialogManageMembe
 	}
 
 	private void updateButtonOkState() {
-		if (textFieldName.getText().trim().isEmpty() || textFieldSurname.getText().trim().isEmpty())
-			buttonOk.setEnabled(false);
-		else
-			buttonOk.setEnabled(true);
+		buttonOk.setEnabled(!textFieldName.getText().trim().isEmpty() && !textFieldSurname.getText().trim().isEmpty());
 	}
 
 	@Override
 	public void showCourses(List<Course> courses) {
-		throw new UnsupportedOperationException("Operation not supported");
+		throw new UnsupportedOperationException(UNSUPPORTED_OP_MESSAGE);
 	}
 
 	@Override
@@ -144,7 +143,7 @@ public class SwingDialogManageMember extends JFrame implements DialogManageMembe
 
 	@Override
 	public void showMembers(List<Member> members) {
-		throw new UnsupportedOperationException("Operation not supported");
+		throw new UnsupportedOperationException(UNSUPPORTED_OP_MESSAGE);
 	}
 
 	@Override
@@ -155,7 +154,7 @@ public class SwingDialogManageMember extends JFrame implements DialogManageMembe
 
 	@Override
 	public void memberDeleted(Member member) {
-		throw new UnsupportedOperationException("Operation not supported");
+		throw new UnsupportedOperationException(UNSUPPORTED_OP_MESSAGE);
 	}
 
 	@Override
@@ -166,17 +165,17 @@ public class SwingDialogManageMember extends JFrame implements DialogManageMembe
 
 	@Override
 	public void courseAdded(Course course) {
-		throw new UnsupportedOperationException("Operation not supported");
+		throw new UnsupportedOperationException(UNSUPPORTED_OP_MESSAGE);
 	}
 
 	@Override
 	public void courseDeleted(Course course) {
-		throw new UnsupportedOperationException("Operation not supported");
+		throw new UnsupportedOperationException(UNSUPPORTED_OP_MESSAGE);
 	}
 
 	@Override
 	public void courseUpdated(Course updatedCourse) {
-		throw new UnsupportedOperationException("Operation not supported");
+		throw new UnsupportedOperationException(UNSUPPORTED_OP_MESSAGE);
 	}
 
 	@Override

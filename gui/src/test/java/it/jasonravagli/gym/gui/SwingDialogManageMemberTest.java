@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import org.assertj.swing.annotation.GUITest;
@@ -222,38 +223,43 @@ public class SwingDialogManageMemberTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	public void testShowCoursesShouldThrow() {
-		assertThatThrownBy(() -> dialogManageMember.showCourses(Collections.emptyList()))
+		List<Course> courses = Collections.emptyList();
+		assertThatThrownBy(() -> dialogManageMember.showCourses(courses))
 				.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
 	}
 
 	@Test
 	public void testShowMembersShouldThrow() {
-		assertThatThrownBy(() -> dialogManageMember.showMembers(Collections.emptyList()))
+		List<Member> members = Collections.emptyList();
+		assertThatThrownBy(() -> dialogManageMember.showMembers(members))
 				.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
 	}
 
 	@Test
 	public void testMemberDeletedShouldThrow() {
-		assertThatThrownBy(
-				() -> dialogManageMember.memberDeleted(createTestMember("name", "surname", LocalDate.of(1996, 10, 31))))
-						.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
+		Member member = createTestMember("name", "surname", LocalDate.of(1996, 10, 31));
+		assertThatThrownBy(() -> dialogManageMember.memberDeleted(member))
+				.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
 	}
 
 	@Test
 	public void testCourseAddedShouldThrow() {
-		assertThatThrownBy(() -> dialogManageMember.courseAdded(createTestCourse("name")))
+		Course course = createTestCourse("name");
+		assertThatThrownBy(() -> dialogManageMember.courseAdded(course))
 				.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
 	}
 
 	@Test
 	public void testCourseUpdatedShouldThrow() {
-		assertThatThrownBy(() -> dialogManageMember.courseUpdated(createTestCourse("name")))
+		Course course = createTestCourse("name");
+		assertThatThrownBy(() -> dialogManageMember.courseUpdated(course))
 				.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
 	}
 
 	@Test
 	public void testCourseDeletedShouldThrow() {
-		assertThatThrownBy(() -> dialogManageMember.courseDeleted(createTestCourse("name")))
+		Course course = createTestCourse("name");
+		assertThatThrownBy(() -> dialogManageMember.courseDeleted(course))
 				.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
 	}
 

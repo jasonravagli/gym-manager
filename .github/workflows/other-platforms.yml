@@ -59,4 +59,3 @@ jobs:
         name: surefire-reports-${{ runner.os }}-jdk${{ matrix.java }}
         path: |
           **/target/site
-          **/failed-gui-tests
