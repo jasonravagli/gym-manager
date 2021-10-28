@@ -14,9 +14,10 @@
 
 		<domainModel.version>1.2</domainModel.version>
 		<junit.version>4.13.2</junit.version>
-		<assertj.version>3.21.0</assertj.version>
+		<assertj-swing.version>3.17.1</assertj-swing.version>
 		<mockito.version>4.0.0</mockito.version>
 		<mongo.version>3.12.10</mongo.version>
+		<miglayout.version>5.3</miglayout.version>
 
 		<docker.image.mongo>mongo:5.0.3</docker.image.mongo>
 	</properties>
@@ -44,6 +45,11 @@
 				<artifactId>mongo-java-driver</artifactId>
 				<version>${mongo.version}</version>
 			</dependency>
+			<dependency>
+			    <groupId>com.miglayout</groupId>
+			    <artifactId>miglayout-swing</artifactId>
+			    <version>${miglayout.version}</version>
+			</dependency>
 
 			<!-- TEST DEPENDENCIES -->
 			<dependency>
@@ -53,15 +59,15 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.assertj</groupId>
-				<artifactId>assertj-core</artifactId>
-				<version>${assertj.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-core</artifactId>
 				<version>${mockito.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-swing-junit</artifactId>
+				<version>${assertj-swing.version}</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -74,7 +80,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
+			<artifactId>assertj-swing-junit</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -129,7 +135,7 @@
 							</goals>
 						</execution>
 					</executions>
-					
+
 					<!-- Exclude class without logic from the coverage -->
 					<configuration>
 						<excludes>
