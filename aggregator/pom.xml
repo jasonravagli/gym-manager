@@ -19,12 +19,33 @@
 
 	<properties>
 		<!-- SONARQUBE CONFIGURATION -->
-		<!-- Exclude the domain model and the other classes without logic from code coverage -->
+		<!-- Exclude the domain model and the other classes without logic from 
+			code coverage -->
 		<sonar.coverage.exclusions>
 			**/domain-model/**,
 			**/mongodb/**/MongoRepositoryProvider.java,
 			**/logic/**/TransactionException.java
 		</sonar.coverage.exclusions>
+		<sonar.issue.ignore.multicriteria>e11,e12</sonar.issue.ignore.multicriteria>
+		
+		<!-- Disable rule "Tests should include assertions" for GUI Tests (AssertJ 
+			Swing tests does not necessarily perform explicit assertions) -->
+		<sonar.issue.ignore.multicriteria.e11.ruleKey>
+			java:S2699
+		</sonar.issue.ignore.multicriteria.e11.ruleKey>
+		<sonar.issue.ignore.multicriteria.e11.resourceKey>
+			**/gui/**/SwingGymViewTest.java
+		</sonar.issue.ignore.multicriteria.e11.resourceKey>
+
+		<!-- Disable rule "Local variable and method parameter names should comply 
+			with a naming convention" for GUI code since WindowBuilder automatically 
+			assign names to variables -->
+		<sonar.issue.ignore.multicriteria.e12.ruleKey>
+			java:S117
+		</sonar.issue.ignore.multicriteria.e12.ruleKey>
+		<sonar.issue.ignore.multicriteria.e12.resourceKey>
+			**/gui/**/SwingGymView.java
+		</sonar.issue.ignore.multicriteria.e12.resourceKey>
 	</properties>
 
 	<build>

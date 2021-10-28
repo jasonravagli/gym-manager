@@ -46,7 +46,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 	@Mock
 	private DialogManageCourse dialogManageCourse;
-	
+
 	@Mock
 	private DialogManageCourse dialogManageSubs;
 
@@ -339,7 +339,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		verify(controller).allCourses();
 	}
-	
+
 	@Test
 	@GUITest
 	public void testButtonManageSubsWhenClickedShouldPassSelectedCourseToDialogManageSubsAndShow() {
@@ -355,7 +355,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		inOrder.verify(dialogManageSubs).setCourse(course);
 		inOrder.verify(dialogManageSubs).show();
 	}
-	
+
 	@Test
 	@GUITest
 	public void testButtonManageSubsWhenDialogClosesAndResultIsOkShouldReloadAllCourses() {
@@ -383,21 +383,21 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		verifyNoInteractions(controller);
 	}
-	
+
 	@Test
 	public void testWhenCoursesTabIsSelectedShouldLoadCourses() {
 		resetControllerMockInvocations();
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
-		
+
 		verify(controller).allCourses();
 	}
-	
+
 	@Test
 	public void testWhenMembersTabIsSelectedShouldLoadMembers() {
 		resetControllerMockInvocations();
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		window.tabbedPane("tabbedPaneMain").selectTab("Members");
-		
+
 		verify(controller).allMembers();
 	}
 
@@ -420,7 +420,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		assertThat(window.list("listMembers").contents()).containsExactly(member1.toString(), member2.toString());
 	}
-	
+
 	@Test
 	public void testShowMembersShouldClearTheErrorLabel() {
 		JLabelFixture errorLabel = window.label("labelError");
@@ -433,16 +433,16 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	public void testMemberAddedShouldThrow() {
-		assertThatThrownBy(
-				() -> swingGymView.memberAdded(createTestMember("name-1", "surname-1", LocalDate.of(1996, 10, 31))))
-						.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
+		Member member = createTestMember("name-1", "surname-1", LocalDate.of(1996, 10, 31));
+		assertThatThrownBy(() -> swingGymView.memberAdded(member)).isInstanceOf(UnsupportedOperationException.class)
+				.hasMessage("Operation not supported");
 	}
 
 	@Test
 	public void testMemberUpdatedShouldThrow() {
-		assertThatThrownBy(
-				() -> swingGymView.memberUpdated(createTestMember("name-1", "surname-1", LocalDate.of(1996, 10, 31))))
-						.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
+		Member member = createTestMember("name-1", "surname-1", LocalDate.of(1996, 10, 31));
+		assertThatThrownBy(() -> swingGymView.memberUpdated(member)).isInstanceOf(UnsupportedOperationException.class)
+				.hasMessage("Operation not supported");
 	}
 
 	@Test
@@ -450,13 +450,14 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 	public void testMemberDeletedShouldRemoveMemberFromTheList() {
 		Member member1 = createTestMember("name-1", "surname-1", LocalDate.of(1996, 10, 31));
 		Member member2 = createTestMember("name-2", "surname-2", LocalDate.of(1996, 4, 30));
-		GuiActionRunner.execute(() -> Arrays.asList(member1, member2).forEach(swingGymView.getListModelMembers()::addElement));
+		GuiActionRunner
+				.execute(() -> Arrays.asList(member1, member2).forEach(swingGymView.getListModelMembers()::addElement));
 
 		swingGymView.memberDeleted(member2);
 
 		assertThat(window.list("listMembers").contents()).containsExactly(member1.toString());
 	}
-	
+
 	@Test
 	@GUITest
 	public void testMemberDeletedShouldClearTheErrorLabel() {
@@ -464,7 +465,8 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(() -> errorLabel.target().setText("Some text"));
 		Member member1 = createTestMember("name-1", "surname-1", LocalDate.of(1996, 10, 31));
 		Member member2 = createTestMember("name-2", "surname-2", LocalDate.of(1996, 4, 30));
-		GuiActionRunner.execute(() -> Arrays.asList(member1, member2).forEach(swingGymView.getListModelMembers()::addElement));
+		GuiActionRunner
+				.execute(() -> Arrays.asList(member1, member2).forEach(swingGymView.getListModelMembers()::addElement));
 
 		swingGymView.memberDeleted(member2);
 
@@ -484,14 +486,14 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		assertThat(window.list("listCourses").contents()).containsExactly(course1.toString(), course2.toString());
 	}
-	
+
 	@Test
 	@GUITest
 	public void testShowCoursesShouldClearTheErrorLabel() {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		JLabelFixture errorLabel = window.label("labelError");
 		GuiActionRunner.execute(() -> errorLabel.target().setText("Some text"));
-		
+
 		swingGymView.showCourses(Collections.emptyList());
 
 		errorLabel.requireText(" ");
@@ -499,16 +501,16 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	public void testCourseAddedShouldThrow() {
-		assertThatThrownBy(
-				() -> swingGymView.courseAdded(createTestCourse("name-1")))
-						.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
+		Course course = createTestCourse("name-1");
+		assertThatThrownBy(() -> swingGymView.courseAdded(course))
+				.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
 	}
 
 	@Test
 	public void tesCourseUpdatedShouldThrow() {
-		assertThatThrownBy(
-				() -> swingGymView.courseUpdated(createTestCourse("name-1")))
-						.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
+		Course course = createTestCourse("name-1");
+		assertThatThrownBy(() -> swingGymView.courseUpdated(course))
+				.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
 	}
 
 	@Test
@@ -517,13 +519,14 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		Course course1 = createTestCourse("name-1");
 		Course course2 = createTestCourse("name-2");
-		GuiActionRunner.execute(() -> Arrays.asList(course1, course2).forEach(swingGymView.getListModelCourses()::addElement));
+		GuiActionRunner
+				.execute(() -> Arrays.asList(course1, course2).forEach(swingGymView.getListModelCourses()::addElement));
 
 		swingGymView.courseDeleted(course2);
 
 		assertThat(window.list("listCourses").contents()).containsExactly(course1.toString());
 	}
-	
+
 	@Test
 	@GUITest
 	public void testCourseDeletedShouldClearTheErrorLabel() {
@@ -532,19 +535,20 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(() -> errorLabel.target().setText("Some text"));
 		Course course1 = createTestCourse("name-1");
 		Course course2 = createTestCourse("name-2");
-		GuiActionRunner.execute(() -> Arrays.asList(course1, course2).forEach(swingGymView.getListModelCourses()::addElement));
+		GuiActionRunner
+				.execute(() -> Arrays.asList(course1, course2).forEach(swingGymView.getListModelCourses()::addElement));
 
 		swingGymView.courseDeleted(course2);
 
 		errorLabel.requireText(" ");
 	}
-	
+
 	@Test
 	@GUITest
 	public void testShowErrorShouldShowTheErrorInTheLabel() {
 		String errorMessage = "An error occurred";
 		swingGymView.showError(errorMessage);
-		
+
 		window.label("labelError").requireText(errorMessage);
 	}
 

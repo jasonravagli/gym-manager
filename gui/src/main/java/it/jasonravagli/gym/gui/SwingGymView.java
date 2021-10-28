@@ -11,7 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import it.jasonravagli.gym.logic.GymController;
@@ -21,6 +23,8 @@ import it.jasonravagli.gym.model.Member;
 import net.miginfocom.swing.MigLayout;
 
 public class SwingGymView extends JFrame implements GymView {
+
+	private static final String UNSUPPORTED_OP_MESSAGE = "Operation not supported";
 
 	private static final long serialVersionUID = 2358001748821893268L;
 
@@ -35,14 +39,14 @@ public class SwingGymView extends JFrame implements GymView {
 	public SwingGymView(GymController controller, DialogManageMember dialogManageMember,
 			DialogManageCourse dialogManageCourse, DialogManageCourse dialogManageSubs) {
 		setTitle("Gym Manager");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 899, 411);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
-		JTabbedPane tabbedPaneMain = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane tabbedPaneMain = new JTabbedPane(SwingConstants.TOP);
 		tabbedPaneMain.addChangeListener(e -> {
 			if (tabbedPaneMain.getSelectedIndex() == 1)
 				controller.allCourses();
@@ -79,8 +83,8 @@ public class SwingGymView extends JFrame implements GymView {
 		});
 		panel.add(buttonUpdateMember, "cell 1 7");
 
-		listModelMembers = new DefaultListModel<Member>();
-		listMembers = new JList<Member>(listModelMembers);
+		listModelMembers = new DefaultListModel<>();
+		listMembers = new JList<>(listModelMembers);
 		listMembers.addListSelectionListener(e -> {
 			boolean enabled = listMembers.getSelectedIndex() != -1;
 			buttonDeleteMember.setEnabled(enabled);
@@ -104,16 +108,12 @@ public class SwingGymView extends JFrame implements GymView {
 				"[grow,sizegroup row][grow,sizegroup row][grow,sizegroup row][grow,sizegroup row][grow,sizegroup row][grow,sizegroup row][grow,sizegroup row][grow,sizegroup row]"));
 
 		JButton buttonRefreshCourses = new JButton("Refresh");
-		buttonRefreshCourses.addActionListener(e -> {
-			controller.allCourses();
-		});
+		buttonRefreshCourses.addActionListener(e -> controller.allCourses());
 		buttonRefreshCourses.setName("buttonRefreshCourses");
 		panel_1.add(buttonRefreshCourses, "cell 0 0");
 
 		JButton buttonDeleteCourse = new JButton("Delete");
-		buttonDeleteCourse.addActionListener(e -> {
-			controller.deleteCourse(listCourses.getSelectedValue());
-		});
+		buttonDeleteCourse.addActionListener(e -> controller.deleteCourse(listCourses.getSelectedValue()));
 		buttonDeleteCourse.setEnabled(false);
 		buttonDeleteCourse.setName("buttonDeleteCourse");
 		panel_1.add(buttonDeleteCourse, "cell 0 7");
@@ -139,15 +139,15 @@ public class SwingGymView extends JFrame implements GymView {
 		JButton buttonManageSubs = new JButton("Manage Subs.");
 		buttonManageSubs.addActionListener(e -> {
 			dialogManageSubs.setCourse(listCourses.getSelectedValue());
-			if(dialogManageSubs.show() == DialogResult.OK)
+			if (dialogManageSubs.show() == DialogResult.OK)
 				controller.allCourses();
 		});
 		buttonManageSubs.setEnabled(false);
 		buttonManageSubs.setName("buttonManageSubs");
 		panel_1.add(buttonManageSubs, "cell 6 7");
 
-		listModelCourses = new DefaultListModel<Course>();
-		listCourses = new JList<Course>(listModelCourses);
+		listModelCourses = new DefaultListModel<>();
+		listCourses = new JList<>(listModelCourses);
 		listCourses.addListSelectionListener(e -> {
 			boolean enabled = listCourses.getSelectedIndex() != -1;
 			buttonDeleteCourse.setEnabled(enabled);
@@ -156,7 +156,7 @@ public class SwingGymView extends JFrame implements GymView {
 		});
 		listCourses.setName("listCourses");
 		panel_1.add(listCourses, "cell 0 1 7 6,grow");
-		
+
 		labelError = new JLabel(" ");
 		labelError.setName("labelError");
 		labelError.setForeground(Color.RED);
@@ -188,9 +188,7 @@ public class SwingGymView extends JFrame implements GymView {
 
 	@Override
 	public void showError(String message) {
-		SwingUtilities.invokeLater(() -> {
-			labelError.setText(message);
-		});
+		SwingUtilities.invokeLater(() -> labelError.setText(message));
 	}
 
 	@Override
@@ -204,7 +202,7 @@ public class SwingGymView extends JFrame implements GymView {
 
 	@Override
 	public void memberAdded(Member member) {
-		throw new UnsupportedOperationException("Operation not supported");
+		throw new UnsupportedOperationException(UNSUPPORTED_OP_MESSAGE);
 
 	}
 
@@ -218,12 +216,12 @@ public class SwingGymView extends JFrame implements GymView {
 
 	@Override
 	public void memberUpdated(Member updatedMember) {
-		throw new UnsupportedOperationException("Operation not supported");
+		throw new UnsupportedOperationException(UNSUPPORTED_OP_MESSAGE);
 	}
 
 	@Override
 	public void courseAdded(Course course) {
-		throw new UnsupportedOperationException("Operation not supported");
+		throw new UnsupportedOperationException(UNSUPPORTED_OP_MESSAGE);
 	}
 
 	@Override
@@ -236,7 +234,7 @@ public class SwingGymView extends JFrame implements GymView {
 
 	@Override
 	public void courseUpdated(Course updatedCourse) {
-		throw new UnsupportedOperationException("Operation not supported");
+		throw new UnsupportedOperationException(UNSUPPORTED_OP_MESSAGE);
 	}
 
 }
