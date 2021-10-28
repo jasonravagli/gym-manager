@@ -75,7 +75,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 	@GUITest
 	public void testControlsInitialState() {
 		window.tabbedPane("tabbedPaneMain").requireTabTitles("Members", "Courses").requireSelectedTab(Index.atIndex(0));
-		window.label("labelError");
+		window.label("labelError").requireText(" ");
 
 		window.list("listMembers");
 		window.button("buttonAddMember").requireEnabled();
@@ -143,14 +143,14 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		resetControllerMockInvocations();
 		window.button("buttonAddMember").click();
 
-		verify(dialogManageMember).show();
+		verify(dialogManageMember).showDialog();
 	}
 
 	@Test
 	@GUITest
 	public void testButtonAddMemberWhenDialogClosesAndResultIsOkShouldReloadAllMembers() {
 		resetControllerMockInvocations();
-		when(dialogManageMember.show()).thenReturn(DialogResult.OK);
+		when(dialogManageMember.showDialog()).thenReturn(DialogResult.OK);
 
 		window.button("buttonAddMember").click();
 
@@ -161,7 +161,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 	@GUITest
 	public void testButtonAddMemberWhenDialogClosesAndResultIsNotOkShouldDoNothing() {
 		resetControllerMockInvocations();
-		when(dialogManageMember.show()).thenReturn(DialogResult.CANCEL);
+		when(dialogManageMember.showDialog()).thenReturn(DialogResult.CANCEL);
 
 		window.button("buttonAddMember").click();
 
@@ -181,7 +181,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		InOrder inOrder = Mockito.inOrder(dialogManageMember);
 		inOrder.verify(dialogManageMember).setMember(member);
-		inOrder.verify(dialogManageMember).show();
+		inOrder.verify(dialogManageMember).showDialog();
 	}
 
 	@Test
@@ -192,7 +192,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(() -> swingGymView.getListModelMembers()
 				.addElement(createTestMember("test-name", "test-surname", LocalDate.of(1996, 4, 30))));
 		listMembers.selectItem(0);
-		when(dialogManageMember.show()).thenReturn(DialogResult.OK);
+		when(dialogManageMember.showDialog()).thenReturn(DialogResult.OK);
 
 		window.button("buttonUpdateMember").click();
 
@@ -207,7 +207,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(() -> swingGymView.getListModelMembers()
 				.addElement(createTestMember("test-name", "test-surname", LocalDate.of(1996, 4, 30))));
 		listMembers.selectItem(0);
-		when(dialogManageMember.show()).thenReturn(DialogResult.CANCEL);
+		when(dialogManageMember.showDialog()).thenReturn(DialogResult.CANCEL);
 
 		window.button("buttonUpdateMember").click();
 
@@ -245,7 +245,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		window.button("buttonAddCourse").click();
 
-		verify(dialogManageCourse).show();
+		verify(dialogManageCourse).showDialog();
 	}
 
 	@Test
@@ -253,7 +253,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 	public void testButtonAddCourseWhenDialogClosesAndResultIsOkShouldReloadAllCourses() {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		resetControllerMockInvocations();
-		when(dialogManageCourse.show()).thenReturn(DialogResult.OK);
+		when(dialogManageCourse.showDialog()).thenReturn(DialogResult.OK);
 
 		window.button("buttonAddCourse").click();
 
@@ -265,7 +265,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 	public void testButtonAddCourseWhenDialogClosesAndResultIsNotOkShouldDoNothing() {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		resetControllerMockInvocations();
-		when(dialogManageCourse.show()).thenReturn(DialogResult.CANCEL);
+		when(dialogManageCourse.showDialog()).thenReturn(DialogResult.CANCEL);
 
 		window.button("buttonAddCourse").click();
 
@@ -285,7 +285,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		InOrder inOrder = Mockito.inOrder(dialogManageCourse);
 		inOrder.verify(dialogManageCourse).setCourse(course);
-		inOrder.verify(dialogManageCourse).show();
+		inOrder.verify(dialogManageCourse).showDialog();
 	}
 
 	@Test
@@ -295,7 +295,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		resetControllerMockInvocations();
 		GuiActionRunner.execute(() -> swingGymView.getListModelCourses().addElement(createTestCourse("test-name")));
 		window.list("listCourses").selectItem(0);
-		when(dialogManageCourse.show()).thenReturn(DialogResult.OK);
+		when(dialogManageCourse.showDialog()).thenReturn(DialogResult.OK);
 
 		window.button("buttonUpdateCourse").click();
 
@@ -309,7 +309,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		resetControllerMockInvocations();
 		GuiActionRunner.execute(() -> swingGymView.getListModelCourses().addElement(createTestCourse("test-name")));
 		window.list("listCourses").selectItem(0);
-		when(dialogManageCourse.show()).thenReturn(DialogResult.CANCEL);
+		when(dialogManageCourse.showDialog()).thenReturn(DialogResult.CANCEL);
 
 		window.button("buttonUpdateCourse").click();
 
@@ -353,7 +353,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		InOrder inOrder = Mockito.inOrder(dialogManageSubs);
 		inOrder.verify(dialogManageSubs).setCourse(course);
-		inOrder.verify(dialogManageSubs).show();
+		inOrder.verify(dialogManageSubs).showDialog();
 	}
 
 	@Test
@@ -363,7 +363,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		resetControllerMockInvocations();
 		GuiActionRunner.execute(() -> swingGymView.getListModelCourses().addElement(createTestCourse("test-name")));
 		window.list("listCourses").selectItem(0);
-		when(dialogManageSubs.show()).thenReturn(DialogResult.OK);
+		when(dialogManageSubs.showDialog()).thenReturn(DialogResult.OK);
 
 		window.button("buttonManageSubs").click();
 
@@ -377,7 +377,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		resetControllerMockInvocations();
 		GuiActionRunner.execute(() -> swingGymView.getListModelCourses().addElement(createTestCourse("test-name")));
 		window.list("listCourses").selectItem(0);
-		when(dialogManageSubs.show()).thenReturn(DialogResult.CANCEL);
+		when(dialogManageSubs.showDialog()).thenReturn(DialogResult.CANCEL);
 
 		window.button("buttonManageSubs").click();
 

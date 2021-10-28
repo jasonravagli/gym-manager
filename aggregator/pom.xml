@@ -24,7 +24,8 @@
 		<sonar.coverage.exclusions>
 			**/domain-model/**,
 			**/mongodb/**/MongoRepositoryProvider.java,
-			**/logic/**/TransactionException.java
+			**/logic/**/TransactionException.java,
+			**/gui/**/SimpleDocumentListener.java
 		</sonar.coverage.exclusions>
 		<sonar.issue.ignore.multicriteria>e11,e12</sonar.issue.ignore.multicriteria>
 		
@@ -34,7 +35,8 @@
 			java:S2699
 		</sonar.issue.ignore.multicriteria.e11.ruleKey>
 		<sonar.issue.ignore.multicriteria.e11.resourceKey>
-			**/gui/**/SwingGymViewTest.java
+			**/gui/**/SwingGymViewTest.java,
+			**/gui/**/SwingDialogManageMemberTest.java
 		</sonar.issue.ignore.multicriteria.e11.resourceKey>
 
 		<!-- Disable rule "Local variable and method parameter names should comply 
@@ -44,7 +46,8 @@
 			java:S117
 		</sonar.issue.ignore.multicriteria.e12.ruleKey>
 		<sonar.issue.ignore.multicriteria.e12.resourceKey>
-			**/gui/**/SwingGymView.java
+			**/gui/**/SwingGymView.java,
+			**/gui/**/SwingDialogManageMember.java
 		</sonar.issue.ignore.multicriteria.e12.resourceKey>
 	</properties>
 

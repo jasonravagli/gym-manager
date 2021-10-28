@@ -18,6 +18,8 @@
 		<mockito.version>4.0.0</mockito.version>
 		<mongo.version>3.12.10</mongo.version>
 		<miglayout.version>5.3</miglayout.version>
+		<lgooddatepicker.version>11.2.1</lgooddatepicker.version>
+		<awaitility.version>4.0.2</awaitility.version>
 
 		<docker.image.mongo>mongo:5.0.3</docker.image.mongo>
 	</properties>
@@ -45,17 +47,23 @@
 				<artifactId>gui</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.mongodb</groupId>
 				<artifactId>mongo-java-driver</artifactId>
 				<version>${mongo.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>com.miglayout</groupId>
-			    <artifactId>miglayout-swing</artifactId>
-			    <version>${miglayout.version}</version>
+				<groupId>com.miglayout</groupId>
+				<artifactId>miglayout-swing</artifactId>
+				<version>${miglayout.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.github.lgooddatepicker</groupId>
+				<artifactId>LGoodDatePicker</artifactId>
+				<version>${lgooddatepicker.version}</version>
+			</dependency>
+
 
 			<!-- TEST DEPENDENCIES -->
 			<dependency>
@@ -74,6 +82,12 @@
 				<groupId>org.assertj</groupId>
 				<artifactId>assertj-swing-junit</artifactId>
 				<version>${assertj-swing.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.awaitility</groupId>
+				<artifactId>awaitility</artifactId>
+				<version>${awaitility.version}</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -147,6 +161,7 @@
 						<excludes>
 							<exclude>**/TransactionException.*</exclude>
 							<exclude>**/MongoRepositoryProvider.*</exclude>
+							<exclude>**/gui/**/SimpleDocumentListener.*</exclude>
 						</excludes>
 					</configuration>
 				</plugin>

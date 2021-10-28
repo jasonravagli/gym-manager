@@ -5,7 +5,7 @@ import it.jasonravagli.gym.model.Member;
 
 public interface DialogManageMember extends GymView {
 	
-	DialogResult show();
+	DialogResult showDialog();
 	
 	void setMember(Member member);
 }

@@ -5,7 +5,7 @@ import it.jasonravagli.gym.model.Course;
 
 public interface DialogManageCourse extends GymView {
 	
-	DialogResult show();
+	DialogResult showDialog();
 	
 	void setCourse(Course course);
 }

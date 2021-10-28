@@ -21,6 +21,7 @@ import it.jasonravagli.gym.logic.GymView;
 import it.jasonravagli.gym.model.Course;
 import it.jasonravagli.gym.model.Member;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.ListSelectionModel;
 
 public class SwingGymView extends JFrame implements GymView {
 
@@ -78,13 +79,14 @@ public class SwingGymView extends JFrame implements GymView {
 		buttonUpdateMember.setName("buttonUpdateMember");
 		buttonUpdateMember.addActionListener(e -> {
 			dialogManageMember.setMember(listMembers.getSelectedValue());
-			if (dialogManageMember.show() == DialogResult.OK)
+			if (dialogManageMember.showDialog() == DialogResult.OK)
 				controller.allMembers();
 		});
 		panel.add(buttonUpdateMember, "cell 1 7");
 
 		listModelMembers = new DefaultListModel<>();
 		listMembers = new JList<>(listModelMembers);
+		listMembers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listMembers.addListSelectionListener(e -> {
 			boolean enabled = listMembers.getSelectedIndex() != -1;
 			buttonDeleteMember.setEnabled(enabled);
@@ -96,7 +98,7 @@ public class SwingGymView extends JFrame implements GymView {
 		JButton buttonAddMember = new JButton("Add");
 		buttonAddMember.setName("buttonAddMember");
 		buttonAddMember.addActionListener(e -> {
-			if (dialogManageMember.show() == DialogResult.OK)
+			if (dialogManageMember.showDialog() == DialogResult.OK)
 				controller.allMembers();
 		});
 		panel.add(buttonAddMember, "cell 3 7");
@@ -121,7 +123,7 @@ public class SwingGymView extends JFrame implements GymView {
 		JButton buttonUpdateCourse = new JButton("Update");
 		buttonUpdateCourse.addActionListener(e -> {
 			dialogManageCourse.setCourse(listCourses.getSelectedValue());
-			if (dialogManageCourse.show() == DialogResult.OK)
+			if (dialogManageCourse.showDialog() == DialogResult.OK)
 				controller.allCourses();
 		});
 		buttonUpdateCourse.setEnabled(false);
@@ -130,7 +132,7 @@ public class SwingGymView extends JFrame implements GymView {
 
 		JButton buttonAddCourse = new JButton("Add");
 		buttonAddCourse.addActionListener(e -> {
-			if (dialogManageCourse.show() == DialogResult.OK)
+			if (dialogManageCourse.showDialog() == DialogResult.OK)
 				controller.allCourses();
 		});
 		buttonAddCourse.setName("buttonAddCourse");
@@ -139,7 +141,7 @@ public class SwingGymView extends JFrame implements GymView {
 		JButton buttonManageSubs = new JButton("Manage Subs.");
 		buttonManageSubs.addActionListener(e -> {
 			dialogManageSubs.setCourse(listCourses.getSelectedValue());
-			if (dialogManageSubs.show() == DialogResult.OK)
+			if (dialogManageSubs.showDialog() == DialogResult.OK)
 				controller.allCourses();
 		});
 		buttonManageSubs.setEnabled(false);
