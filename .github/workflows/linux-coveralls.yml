@@ -53,3 +53,4 @@ jobs:
         path: |
           **/target/site
           **/target/pit-reports
+          **/failed-gui-tests
