@@ -11,7 +11,7 @@ import java.util.UUID;
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
-import org.assertj.swing.fixture.DialogFixture;
+import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class SwingDialogManageMemberTest extends AssertJSwingJUnitTestCase {
 
 	AutoCloseable autoCloseable;
 
-	private DialogFixture dialogFixture;
+	private FrameFixture dialogFixture;
 
 	@Mock
 	private GymController controller;
@@ -46,7 +46,7 @@ public class SwingDialogManageMemberTest extends AssertJSwingJUnitTestCase {
 			return dialogManageMember;
 		});
 
-		dialogFixture = new DialogFixture(robot(), dialogManageMember);
+		dialogFixture = new FrameFixture(robot(), dialogManageMember);
 		dialogFixture.show();
 	}
 
@@ -272,13 +272,13 @@ public class SwingDialogManageMemberTest extends AssertJSwingJUnitTestCase {
 		assertThat(dialogManageMember.getResult()).isEqualTo(DialogResult.OK);
 		dialogFixture.requireNotVisible();
 	}
-	
+
 	@Test
 	public void testShowErrorShouldShowMessageInLabelError() {
 		String errorMessage = "An error occurred";
-		
+
 		dialogManageMember.showError(errorMessage);
-		
+
 		dialogFixture.label("labelError").requireText(errorMessage);
 	}
 

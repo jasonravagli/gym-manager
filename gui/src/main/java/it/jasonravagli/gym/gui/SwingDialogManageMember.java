@@ -5,7 +5,7 @@ import java.awt.FlowLayout;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -20,9 +20,9 @@ import it.jasonravagli.gym.model.Course;
 import it.jasonravagli.gym.model.Member;
 import net.miginfocom.swing.MigLayout;
 
-public class SwingDialogManageMember extends JDialog implements DialogManageMember {
+public class SwingDialogManageMember extends JFrame implements DialogManageMember {
 
-	private static final long serialVersionUID = -7493514996863733440L;
+	private static final long serialVersionUID = -7493514996863733430L;
 
 	private final JPanel contentPanel = new JPanel();
 
@@ -98,7 +98,7 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 		JButton buttonCancel = new JButton("Cancel");
 		buttonCancel.addActionListener(e -> {
 			result = DialogResult.CANCEL;
-			dispose();
+			setVisible(false);
 		});
 		buttonCancel.setName("buttonCancel");
 		buttonCancel.setActionCommand("Cancel");
@@ -150,7 +150,7 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 	@Override
 	public void memberAdded(Member member) {
 		result = DialogResult.OK;
-		dispose();
+		setVisible(false);
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 	@Override
 	public void memberUpdated(Member updatedMember) {
 		result = DialogResult.OK;
-		dispose();
+		setVisible(false);
 	}
 
 	@Override
