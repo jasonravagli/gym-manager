@@ -32,7 +32,7 @@ jobs:
         restore-keys: ${{ runner.os }}-m2-jdk11-
     - name: Build with Maven
       run: >
-        mvn install -Pcoveralls,pit,sonar
+        xvfb-run mvn install -Pcoveralls,pit,sonar
         -DrepoToken=$COVERALLS_TOKEN -DpullRequest=${{ github.event.pull_request.number }}
         -Dsonar.organization=jasonravagli-github -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.projectKey=jasonravagli_gym-manager

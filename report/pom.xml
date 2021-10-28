@@ -21,6 +21,10 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>mongodb</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>gui</artifactId>
+		</dependency>
 	</dependencies>
 
 	<profiles>
@@ -81,6 +85,7 @@
 							<sourceDirectories>
 								<sourceDirectory>${project.basedir}/../logic/src/main/java</sourceDirectory>
 								<sourceDirectory>${project.basedir}/../mongodb/src/main/java</sourceDirectory>
+								<sourceDirectory>${project.basedir}/../gui/src/main/java</sourceDirectory>
 							</sourceDirectories>
 						</configuration>
 					</plugin>
