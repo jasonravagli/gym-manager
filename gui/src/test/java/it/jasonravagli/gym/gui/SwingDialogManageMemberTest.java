@@ -117,7 +117,6 @@ public class SwingDialogManageMemberTest extends AssertJSwingJUnitTestCase {
 		dialogFixture.textBox("textFieldSurname").setText(surnameWithTrailingSpaces);
 		DatePicker datePicker = (DatePicker) dialogFixture.panel("datePickerBirth").target();
 		GuiActionRunner.execute(() -> datePicker.setDate(dateOfBirth));
-		GuiActionRunner.execute(() -> dialogFixture.label("labelError").target().setText("Some errors"));
 
 		dialogFixture.button("buttonOk").click();
 
@@ -139,7 +138,6 @@ public class SwingDialogManageMemberTest extends AssertJSwingJUnitTestCase {
 		dialogFixture.textBox("textFieldSurname").setText(surnameWithTrailingSpaces);
 		DatePicker datePicker = (DatePicker) dialogFixture.panel("datePickerBirth").target();
 		GuiActionRunner.execute(() -> datePicker.setDate(dateOfBirth));
-		GuiActionRunner.execute(() -> dialogFixture.label("labelError").target().setText("Some errors"));
 		Member memberToUpdate = createTestMember("name", "surname", LocalDate.of(1996, 4, 30));
 		dialogManageMember.setMember(memberToUpdate);
 
