@@ -27,8 +27,8 @@
 			**/logic/**/TransactionException.java,
 			**/gui/**/SimpleDocumentListener.java
 		</sonar.coverage.exclusions>
-		<sonar.issue.ignore.multicriteria>e11,e12</sonar.issue.ignore.multicriteria>
-		
+		<sonar.issue.ignore.multicriteria>e11,e12,e13</sonar.issue.ignore.multicriteria>
+
 		<!-- Disable rule "Tests should include assertions" for GUI Tests (AssertJ 
 			Swing tests does not necessarily perform explicit assertions) -->
 		<sonar.issue.ignore.multicriteria.e11.ruleKey>
@@ -46,6 +46,16 @@
 		</sonar.issue.ignore.multicriteria.e12.ruleKey>
 		<sonar.issue.ignore.multicriteria.e12.resourceKey>
 			**/gui/**/Swing*.java
+		</sonar.issue.ignore.multicriteria.e12.resourceKey>
+
+		<!-- Disable rule "Source files should not have any duplicated blocks" 
+			for Swing dialogs classes. Their layout is similar but abstracting the GUI 
+			layout does not bring any improvements -->
+		<sonar.issue.ignore.multicriteria.e12.ruleKey>
+			common-java:DuplicatedBlocks
+		</sonar.issue.ignore.multicriteria.e12.ruleKey>
+		<sonar.issue.ignore.multicriteria.e12.resourceKey>
+			**/gui/**/SwingDialog*.java
 		</sonar.issue.ignore.multicriteria.e12.resourceKey>
 	</properties>
 
