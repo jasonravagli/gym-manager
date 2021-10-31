@@ -34,7 +34,6 @@ public class SwingGymView extends JFrame implements GymView {
 	private DefaultListModel<Course> listModelCourses;
 	private JList<Member> listMembers;
 	private JList<Course> listCourses;
-
 	private JLabel labelError;
 
 	public SwingGymView(GymController controller, DialogManageMember dialogManageMember,

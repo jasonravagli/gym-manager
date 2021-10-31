@@ -40,6 +40,7 @@ public class SwingDialogManageMember extends JFrame implements DialogManageMembe
 	private JLabel labelError;
 
 	public SwingDialogManageMember(GymController controller) {
+		setDefaultCloseOperation(HIDE_ON_CLOSE);
 		setBounds(100, 100, 465, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -99,7 +100,6 @@ public class SwingDialogManageMember extends JFrame implements DialogManageMembe
 			setVisible(false);
 		});
 		buttonCancel.setName("buttonCancel");
-		buttonCancel.setActionCommand("Cancel");
 		buttonPane.add(buttonCancel);
 		buttonOk = new JButton("OK");
 		buttonOk.addActionListener(e -> {
@@ -118,7 +118,6 @@ public class SwingDialogManageMember extends JFrame implements DialogManageMembe
 		});
 		buttonOk.setEnabled(false);
 		buttonOk.setName("buttonOk");
-		buttonOk.setActionCommand("OK");
 		buttonPane.add(buttonOk);
 		getRootPane().setDefaultButton(buttonOk);
 	}

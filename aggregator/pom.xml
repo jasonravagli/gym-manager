@@ -51,12 +51,12 @@
 		<!-- Disable rule "Source files should not have any duplicated blocks" 
 			for Swing dialogs classes. Their layout is similar but abstracting the GUI 
 			layout does not bring any improvements -->
-		<sonar.issue.ignore.multicriteria.e12.ruleKey>
+		<sonar.issue.ignore.multicriteria.e13.ruleKey>
 			common-java:DuplicatedBlocks
-		</sonar.issue.ignore.multicriteria.e12.ruleKey>
-		<sonar.issue.ignore.multicriteria.e12.resourceKey>
+		</sonar.issue.ignore.multicriteria.e13.ruleKey>
+		<sonar.issue.ignore.multicriteria.e13.resourceKey>
 			**/gui/**/SwingDialog*.java
-		</sonar.issue.ignore.multicriteria.e12.resourceKey>
+		</sonar.issue.ignore.multicriteria.e13.resourceKey>
 	</properties>
 
 	<build>

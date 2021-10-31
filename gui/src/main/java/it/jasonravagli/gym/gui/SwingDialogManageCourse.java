@@ -35,6 +35,7 @@ public class SwingDialogManageCourse extends JFrame implements DialogManageCours
 	private JLabel labelError;
 
 	public SwingDialogManageCourse(GymController controller) {
+		setDefaultCloseOperation(HIDE_ON_CLOSE);
 		setBounds(100, 100, 380, 191);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -75,7 +76,6 @@ public class SwingDialogManageCourse extends JFrame implements DialogManageCours
 			setVisible(false);
 		});
 		buttonCancel.setName("buttonCancel");
-		buttonCancel.setActionCommand("Cancel");
 		buttonPane.add(buttonCancel);
 		buttonOk = new JButton("OK");
 		buttonOk.addActionListener(e -> {
@@ -92,7 +92,6 @@ public class SwingDialogManageCourse extends JFrame implements DialogManageCours
 		});
 		buttonOk.setEnabled(false);
 		buttonOk.setName("buttonOk");
-		buttonOk.setActionCommand("OK");
 		buttonPane.add(buttonOk);
 		getRootPane().setDefaultButton(buttonOk);
 	}
