@@ -1,25 +1,24 @@
 package it.jasonravagli.gym.gui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import it.jasonravagli.gym.logic.GymController;
 import it.jasonravagli.gym.model.Course;
 import it.jasonravagli.gym.model.Member;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
-import javax.swing.JScrollPane;
 
 public class SwingDialogManageSubs extends JFrame implements DialogManageCourse {
 
@@ -38,7 +37,6 @@ public class SwingDialogManageSubs extends JFrame implements DialogManageCourse 
 	private transient GymController controller;
 
 	private transient Course course;
-
 
 	/**
 	 * Create the frame.
@@ -189,7 +187,7 @@ public class SwingDialogManageSubs extends JFrame implements DialogManageCourse 
 	@Override
 	public DialogResult showDialog() {
 		if (course == null)
-			throw new RuntimeException("Course cannot be null");
+			throw new InvalidCourseException("Course cannot be null");
 
 		result = DialogResult.CANCEL;
 
@@ -226,7 +224,6 @@ public class SwingDialogManageSubs extends JFrame implements DialogManageCourse 
 	void setResult(DialogResult result) {
 		this.result = result;
 	}
-	
 
 	/*
 	 * Only for testing purposes

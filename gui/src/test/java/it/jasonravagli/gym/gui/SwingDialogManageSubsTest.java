@@ -228,7 +228,7 @@ public class SwingDialogManageSubsTest extends AssertJSwingJUnitTestCase {
 		dialogManageSubs.setCourse(null);
 		dialogFixture.close();
 
-		assertThatThrownBy(() -> dialogManageSubs.showDialog()).isInstanceOf(RuntimeException.class)
+		assertThatThrownBy(() -> dialogManageSubs.showDialog()).isInstanceOf(InvalidCourseException.class)
 				.hasMessage("Course cannot be null");
 	}
 
@@ -279,8 +279,8 @@ public class SwingDialogManageSubsTest extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testCourseAddedShouldThrow() {
 		Course course = createTestCourse("name", Collections.emptySet());
-		assertThatThrownBy(() -> dialogManageSubs.courseDeleted(course))
-				.isInstanceOf(UnsupportedOperationException.class).hasMessage(UNSUPPORTED_OP_MESSAGE);
+		assertThatThrownBy(() -> dialogManageSubs.courseAdded(course)).isInstanceOf(UnsupportedOperationException.class)
+				.hasMessage(UNSUPPORTED_OP_MESSAGE);
 	}
 
 	@Test

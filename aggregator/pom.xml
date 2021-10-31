@@ -55,7 +55,7 @@
 			common-java:DuplicatedBlocks
 		</sonar.issue.ignore.multicriteria.e13.ruleKey>
 		<sonar.issue.ignore.multicriteria.e13.resourceKey>
-			**/gui/**/SwingDialog*.java
+			**/gui/**/*.java
 		</sonar.issue.ignore.multicriteria.e13.resourceKey>
 	</properties>
 
