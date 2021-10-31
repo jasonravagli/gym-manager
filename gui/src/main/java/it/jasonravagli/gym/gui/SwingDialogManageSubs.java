@@ -31,30 +31,14 @@ public class SwingDialogManageSubs extends JFrame implements DialogManageCourse 
 	private DefaultListModel<Member> listModelOtherMembers;
 	private JButton buttonAddSub;
 	private JButton buttonRemoveSub;
+	private JLabel labelError;
 
 	private DialogResult result;
 
-	private GymController controller;
+	private transient GymController controller;
 
-	private Course course;
+	private transient Course course;
 
-	private JLabel labelError;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SwingDialogManageSubs frame = new SwingDialogManageSubs(null);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
