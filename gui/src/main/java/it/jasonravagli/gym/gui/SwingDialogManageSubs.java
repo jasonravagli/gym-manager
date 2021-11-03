@@ -44,6 +44,7 @@ public class SwingDialogManageSubs extends JDialog implements DialogManageCourse
 	 * @param controller
 	 */
 	public SwingDialogManageSubs(GymController controller) {
+		setTitle("Manage Subscribers");
 		this.controller = controller;
 		setDefaultCloseOperation(HIDE_ON_CLOSE);
 		setBounds(100, 100, 595, 369);

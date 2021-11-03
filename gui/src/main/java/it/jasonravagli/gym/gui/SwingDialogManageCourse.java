@@ -17,6 +17,7 @@ import it.jasonravagli.gym.logic.GymController;
 import it.jasonravagli.gym.model.Course;
 import it.jasonravagli.gym.model.Member;
 import net.miginfocom.swing.MigLayout;
+import java.awt.Color;
 
 public class SwingDialogManageCourse extends JDialog implements DialogManageCourse {
 
@@ -36,6 +37,7 @@ public class SwingDialogManageCourse extends JDialog implements DialogManageCour
 	private JLabel labelError;
 
 	public SwingDialogManageCourse(GymController controller) {
+		setTitle("Manage Course");
 		setDefaultCloseOperation(HIDE_ON_CLOSE);
 		setBounds(100, 100, 380, 191);
 		getContentPane().setLayout(new BorderLayout());
@@ -65,6 +67,7 @@ public class SwingDialogManageCourse extends JDialog implements DialogManageCour
 		textFieldName.setColumns(10);
 
 		labelError = new JLabel(" ");
+		labelError.setForeground(Color.RED);
 		labelError.setName("labelError");
 		contentPanel.add(labelError, "cell 1 2");
 
