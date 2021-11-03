@@ -3,7 +3,6 @@ package it.jasonravagli.gym.gui;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -139,38 +138,49 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
-	public void testButtonAddMemberWhenClickedShouldShowDialogManageMember() {
+	public void testButtonAddMemberWhenClickedShouldChangeControllerViewAndShowModalDialogManageMember() {
 		resetControllerMockInvocations();
 		window.button("buttonAddMember").click();
 
-		verify(dialogManageMember).showDialog();
+		InOrder inOrder = Mockito.inOrder(dialogManageMember, controller);
+		inOrder.verify(controller).setView(dialogManageMember);
+		inOrder.verify(dialogManageMember).setModalState(true);
+		inOrder.verify(dialogManageMember).showDialog();
 	}
 
 	@Test
 	@GUITest
-	public void testButtonAddMemberWhenDialogClosesAndResultIsOkShouldReloadAllMembers() {
+	public void testButtonAddMemberWhenDialogClosesAndResultIsOkShouldResetControllerViewAndReloadAllMembers() {
 		resetControllerMockInvocations();
 		when(dialogManageMember.showDialog()).thenReturn(DialogResult.OK);
 
 		window.button("buttonAddMember").click();
 
-		verify(controller).allMembers();
+		InOrder inOrder = Mockito.inOrder(dialogManageMember, controller);
+		inOrder.verify(dialogManageMember).showDialog();
+		inOrder.verify(dialogManageMember).setModalState(false);
+		inOrder.verify(controller).setView(swingGymView);
+		inOrder.verify(controller).allMembers();
 	}
 
 	@Test
 	@GUITest
-	public void testButtonAddMemberWhenDialogClosesAndResultIsNotOkShouldDoNothing() {
+	public void testButtonAddMemberWhenDialogClosesAndResultIsNotOkShouldResetControllerView() {
 		resetControllerMockInvocations();
 		when(dialogManageMember.showDialog()).thenReturn(DialogResult.CANCEL);
 
 		window.button("buttonAddMember").click();
 
-		verifyNoInteractions(controller);
+		InOrder inOrder = Mockito.inOrder(dialogManageMember, controller);
+		inOrder.verify(dialogManageMember).showDialog();
+		inOrder.verify(dialogManageMember).setModalState(false);
+		inOrder.verify(controller).setView(swingGymView);
+		inOrder.verifyNoMoreInteractions();
 	}
 
 	@Test
 	@GUITest
-	public void testButtonUpdateMemberWhenClickedShouldPassSelectedMemberToDialogManageMemberAndShow() {
+	public void testButtonUpdateMemberWhenClickedShouldChangeControllerViewAndSetupAndShowDialog() {
 		resetControllerMockInvocations();
 		JListFixture listMembers = window.list("listMembers");
 		Member member = createTestMember("test-name", "test-surname", LocalDate.of(1996, 4, 30));
@@ -179,14 +189,16 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		window.button("buttonUpdateMember").click();
 
-		InOrder inOrder = Mockito.inOrder(dialogManageMember);
+		InOrder inOrder = Mockito.inOrder(controller, dialogManageMember);
+		inOrder.verify(controller).setView(dialogManageMember);
 		inOrder.verify(dialogManageMember).setMember(member);
+		inOrder.verify(dialogManageMember).setModalState(true);
 		inOrder.verify(dialogManageMember).showDialog();
 	}
 
 	@Test
 	@GUITest
-	public void testButtonUpdateMemberWhenDialogClosesAndResultIsOkShouldReloadAllMembers() {
+	public void testButtonUpdateMemberWhenDialogClosesAndResultIsOkShouldResetControllerViewAndReloadAllMembers() {
 		resetControllerMockInvocations();
 		JListFixture listMembers = window.list("listMembers");
 		GuiActionRunner.execute(() -> swingGymView.getListModelMembers()
@@ -196,12 +208,16 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		window.button("buttonUpdateMember").click();
 
-		verify(controller).allMembers();
+		InOrder inOrder = Mockito.inOrder(controller, dialogManageMember);
+		inOrder.verify(dialogManageMember).showDialog();
+		inOrder.verify(dialogManageMember).setModalState(false);
+		inOrder.verify(controller).setView(swingGymView);
+		inOrder.verify(controller).allMembers();
 	}
 
 	@Test
 	@GUITest
-	public void testButtonUpdateMemberWhenDialogClosesAndResultIsNotOkShouldDoNothing() {
+	public void testButtonUpdateMemberWhenDialogClosesAndResultIsNotOkShouldResetControllerView() {
 		resetControllerMockInvocations();
 		JListFixture listMembers = window.list("listMembers");
 		GuiActionRunner.execute(() -> swingGymView.getListModelMembers()
@@ -211,7 +227,11 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		window.button("buttonUpdateMember").click();
 
-		verifyNoInteractions(controller);
+		InOrder inOrder = Mockito.inOrder(controller, dialogManageMember);
+		inOrder.verify(dialogManageMember).showDialog();
+		inOrder.verify(dialogManageMember).setModalState(false);
+		inOrder.verify(controller).setView(swingGymView);
+		inOrder.verifyNoMoreInteractions();
 	}
 
 	@Test
@@ -239,42 +259,53 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
-	public void testButtonAddCourseWhenClickedShouldShowDialogManageCourse() {
+	public void testButtonAddCourseWhenClickedShouldChangeControllerViewAndShowModalDialogManageCourse() {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		resetControllerMockInvocations();
 
 		window.button("buttonAddCourse").click();
 
-		verify(dialogManageCourse).showDialog();
+		InOrder inOrder = Mockito.inOrder(controller, dialogManageCourse);
+		inOrder.verify(controller).setView(dialogManageCourse);
+		inOrder.verify(dialogManageCourse).setModalState(true);
+		inOrder.verify(dialogManageCourse).showDialog();
 	}
 
 	@Test
 	@GUITest
-	public void testButtonAddCourseWhenDialogClosesAndResultIsOkShouldReloadAllCourses() {
+	public void testButtonAddCourseWhenDialogClosesAndResultIsOkShouldResetControllerViewAndReloadAllCourses() {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		resetControllerMockInvocations();
 		when(dialogManageCourse.showDialog()).thenReturn(DialogResult.OK);
 
 		window.button("buttonAddCourse").click();
 
-		verify(controller).allCourses();
+		InOrder inOrder = Mockito.inOrder(dialogManageCourse, controller);
+		inOrder.verify(dialogManageCourse).showDialog();
+		inOrder.verify(dialogManageCourse).setModalState(false);
+		inOrder.verify(controller).setView(swingGymView);
+		inOrder.verify(controller).allCourses();
 	}
 
 	@Test
 	@GUITest
-	public void testButtonAddCourseWhenDialogClosesAndResultIsNotOkShouldDoNothing() {
+	public void testButtonAddCourseWhenDialogClosesAndResultIsNotOkShouldResetControllerView() {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		resetControllerMockInvocations();
 		when(dialogManageCourse.showDialog()).thenReturn(DialogResult.CANCEL);
 
 		window.button("buttonAddCourse").click();
 
-		verifyNoInteractions(controller);
+		InOrder inOrder = Mockito.inOrder(dialogManageCourse, controller);
+		inOrder.verify(dialogManageCourse).showDialog();
+		inOrder.verify(dialogManageCourse).setModalState(false);
+		inOrder.verify(controller).setView(swingGymView);
+		inOrder.verifyNoMoreInteractions();
 	}
 
 	@Test
 	@GUITest
-	public void testButtonUpdateCourseWhenClickedShouldPassSelecteCourseToDialogManageCourseAndShow() {
+	public void testButtonUpdateCourseWhenClickedShouldChangeControllerViewAndSetupAndShowDialog() {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		resetControllerMockInvocations();
 		Course course = createTestCourse("test-name");
@@ -283,14 +314,16 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		window.button("buttonUpdateCourse").click();
 
-		InOrder inOrder = Mockito.inOrder(dialogManageCourse);
+		InOrder inOrder = Mockito.inOrder(controller, dialogManageCourse);
+		inOrder.verify(controller).setView(dialogManageCourse);
 		inOrder.verify(dialogManageCourse).setCourse(course);
+		inOrder.verify(dialogManageCourse).setModalState(true);
 		inOrder.verify(dialogManageCourse).showDialog();
 	}
 
 	@Test
 	@GUITest
-	public void testButtonUpdateCourseWhenDialogClosesAndResultIsOkShouldReloadAllCourses() {
+	public void testButtonUpdateCourseWhenDialogClosesAndResultIsOkShouldResetControllerViewAndReloadAllCourses() {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		resetControllerMockInvocations();
 		GuiActionRunner.execute(() -> swingGymView.getListModelCourses().addElement(createTestCourse("test-name")));
@@ -299,12 +332,16 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		window.button("buttonUpdateCourse").click();
 
-		verify(controller).allCourses();
+		InOrder inOrder = Mockito.inOrder(controller, dialogManageCourse);
+		inOrder.verify(dialogManageCourse).showDialog();
+		inOrder.verify(dialogManageCourse).setModalState(false);
+		inOrder.verify(controller).setView(swingGymView);
+		inOrder.verify(controller).allCourses();
 	}
 
 	@Test
 	@GUITest
-	public void testButtonUpdateCourseWhenDialogClosesAndResultIsNotOkShouldDoNothing() {
+	public void testButtonUpdateCourseWhenDialogClosesAndResultIsNotOkShouldResetControllerView() {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		resetControllerMockInvocations();
 		GuiActionRunner.execute(() -> swingGymView.getListModelCourses().addElement(createTestCourse("test-name")));
@@ -313,7 +350,11 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		window.button("buttonUpdateCourse").click();
 
-		verifyNoInteractions(controller);
+		InOrder inOrder = Mockito.inOrder(controller, dialogManageCourse);
+		inOrder.verify(dialogManageCourse).showDialog();
+		inOrder.verify(dialogManageCourse).setModalState(false);
+		inOrder.verify(controller).setView(swingGymView);
+		inOrder.verifyNoMoreInteractions();
 	}
 
 	@Test
@@ -342,7 +383,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
-	public void testButtonManageSubsWhenClickedShouldPassSelectedCourseToDialogManageSubsAndShow() {
+	public void testButtonManageSubsWhenClickedShouldChangeControllerViewAndSetupAndShowDialog() {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		resetControllerMockInvocations();
 		Course course = createTestCourse("test-name");
@@ -351,8 +392,10 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		window.button("buttonManageSubs").click();
 
-		InOrder inOrder = Mockito.inOrder(dialogManageSubs);
+		InOrder inOrder = Mockito.inOrder(controller, dialogManageSubs);
+		inOrder.verify(controller).setView(dialogManageSubs);
 		inOrder.verify(dialogManageSubs).setCourse(course);
+		inOrder.verify(dialogManageSubs).setModalState(true);
 		inOrder.verify(dialogManageSubs).showDialog();
 	}
 
@@ -367,7 +410,11 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		window.button("buttonManageSubs").click();
 
-		verify(controller).allCourses();
+		InOrder inOrder = Mockito.inOrder(controller, dialogManageSubs);
+		inOrder.verify(dialogManageSubs).showDialog();
+		inOrder.verify(dialogManageSubs).setModalState(false);
+		inOrder.verify(controller).setView(swingGymView);
+		inOrder.verify(controller).allCourses();
 	}
 
 	@Test
@@ -381,7 +428,11 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		window.button("buttonManageSubs").click();
 
-		verifyNoInteractions(controller);
+		InOrder inOrder = Mockito.inOrder(controller, dialogManageSubs);
+		inOrder.verify(dialogManageSubs).showDialog();
+		inOrder.verify(dialogManageSubs).setModalState(false);
+		inOrder.verify(controller).setView(swingGymView);
+		inOrder.verifyNoMoreInteractions();
 	}
 
 	@Test
@@ -401,9 +452,6 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		verify(controller).allMembers();
 	}
 
-	/*
-	 * Only for documentation
-	 */
 	@Test
 	public void testWhenViewIsShownShouldLoadMembers() {
 		verify(controller).allMembers();
@@ -502,15 +550,15 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testCourseAddedShouldThrow() {
 		Course course = createTestCourse("name-1");
-		assertThatThrownBy(() -> swingGymView.courseAdded(course))
-				.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
+		assertThatThrownBy(() -> swingGymView.courseAdded(course)).isInstanceOf(UnsupportedOperationException.class)
+				.hasMessage("Operation not supported");
 	}
 
 	@Test
 	public void tesCourseUpdatedShouldThrow() {
 		Course course = createTestCourse("name-1");
-		assertThatThrownBy(() -> swingGymView.courseUpdated(course))
-				.isInstanceOf(UnsupportedOperationException.class).hasMessage("Operation not supported");
+		assertThatThrownBy(() -> swingGymView.courseUpdated(course)).isInstanceOf(UnsupportedOperationException.class)
+				.hasMessage("Operation not supported");
 	}
 
 	@Test

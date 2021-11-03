@@ -22,6 +22,8 @@ import it.jasonravagli.gym.model.Course;
 import it.jasonravagli.gym.model.Member;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.ListSelectionModel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class SwingGymView extends JFrame implements GymView {
 
@@ -47,12 +49,6 @@ public class SwingGymView extends JFrame implements GymView {
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
 		JTabbedPane tabbedPaneMain = new JTabbedPane(SwingConstants.TOP);
-		tabbedPaneMain.addChangeListener(e -> {
-			if (tabbedPaneMain.getSelectedIndex() == 1)
-				controller.allCourses();
-			else
-				controller.allMembers();
-		});
 		tabbedPaneMain.setName("tabbedPaneMain");
 		contentPane.add(tabbedPaneMain);
 
@@ -77,8 +73,15 @@ public class SwingGymView extends JFrame implements GymView {
 		buttonUpdateMember.setEnabled(false);
 		buttonUpdateMember.setName("buttonUpdateMember");
 		buttonUpdateMember.addActionListener(e -> {
+			controller.setView(dialogManageMember);
 			dialogManageMember.setMember(listMembers.getSelectedValue());
-			if (dialogManageMember.showDialog() == DialogResult.OK)
+			
+			dialogManageMember.setModalState(true);
+			DialogResult dialogResult = dialogManageMember.showDialog();
+			dialogManageMember.setModalState(false);
+			controller.setView(this);
+			
+			if (dialogResult == DialogResult.OK)
 				controller.allMembers();
 		});
 		panel.add(buttonUpdateMember, "cell 1 7");
@@ -97,7 +100,14 @@ public class SwingGymView extends JFrame implements GymView {
 		JButton buttonAddMember = new JButton("Add");
 		buttonAddMember.setName("buttonAddMember");
 		buttonAddMember.addActionListener(e -> {
-			if (dialogManageMember.showDialog() == DialogResult.OK)
+			controller.setView(dialogManageMember);
+			
+			dialogManageMember.setModalState(true);
+			DialogResult result = dialogManageMember.showDialog();
+			dialogManageMember.setModalState(false);
+			controller.setView(this);
+			
+			if (result == DialogResult.OK)
 				controller.allMembers();
 		});
 		panel.add(buttonAddMember, "cell 3 7");
@@ -121,8 +131,15 @@ public class SwingGymView extends JFrame implements GymView {
 
 		JButton buttonUpdateCourse = new JButton("Update");
 		buttonUpdateCourse.addActionListener(e -> {
+			controller.setView(dialogManageCourse);
 			dialogManageCourse.setCourse(listCourses.getSelectedValue());
-			if (dialogManageCourse.showDialog() == DialogResult.OK)
+			
+			dialogManageCourse.setModalState(true);
+			DialogResult dialogResult = dialogManageCourse.showDialog();
+			dialogManageCourse.setModalState(false);
+			controller.setView(this);
+			
+			if (dialogResult == DialogResult.OK)
 				controller.allCourses();
 		});
 		buttonUpdateCourse.setEnabled(false);
@@ -131,7 +148,14 @@ public class SwingGymView extends JFrame implements GymView {
 
 		JButton buttonAddCourse = new JButton("Add");
 		buttonAddCourse.addActionListener(e -> {
-			if (dialogManageCourse.showDialog() == DialogResult.OK)
+			controller.setView(dialogManageCourse);
+			
+			dialogManageCourse.setModalState(true);
+			DialogResult result = dialogManageCourse.showDialog();
+			dialogManageCourse.setModalState(false);
+			controller.setView(this);
+			
+			if (result == DialogResult.OK)
 				controller.allCourses();
 		});
 		buttonAddCourse.setName("buttonAddCourse");
@@ -139,8 +163,15 @@ public class SwingGymView extends JFrame implements GymView {
 
 		JButton buttonManageSubs = new JButton("Manage Subs.");
 		buttonManageSubs.addActionListener(e -> {
+			controller.setView(dialogManageSubs);
 			dialogManageSubs.setCourse(listCourses.getSelectedValue());
-			if (dialogManageSubs.showDialog() == DialogResult.OK)
+			
+			dialogManageSubs.setModalState(true);
+			DialogResult result = dialogManageSubs.showDialog();
+			dialogManageSubs.setModalState(false);
+			controller.setView(this);
+			
+			if (result == DialogResult.OK)
 				controller.allCourses();
 		});
 		buttonManageSubs.setEnabled(false);
@@ -157,11 +188,25 @@ public class SwingGymView extends JFrame implements GymView {
 		});
 		listCourses.setName("listCourses");
 		panel_1.add(listCourses, "cell 0 1 7 6,grow");
+		
+		tabbedPaneMain.addChangeListener(e -> {
+			if (tabbedPaneMain.getSelectedIndex() == 1)
+				controller.allCourses();
+			else
+				controller.allMembers();
+		});
 
 		labelError = new JLabel(" ");
 		labelError.setName("labelError");
 		labelError.setForeground(Color.RED);
 		contentPane.add(labelError);
+
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				controller.allMembers();
+			}
+		});
 	}
 
 	/*
