@@ -40,8 +40,13 @@ jobs:
           !/.m2/repository/it/jasonravagli/gym/**
         key: ${{ runner.os }}-m2-jdk${{ matrix.java }}-${{ hashFiles('**/pom.xml', '**/other-platforms.yml') }}
         restore-keys: ${{ runner.os }}-m2-jdk${{ matrix.java }}-
-    - name: Build with Maven
+    - name: Build with Maven on ${{ runner.os }}
+      if: runner.os != 'Linux'
       run: mvn install
+      working-directory: ${{ env.workdir }}
+    - name: Build with Maven on Linux
+      if: runner.os == 'Linux'
+      run: xvfb-run mvn install
       working-directory: ${{ env.workdir }}
     - name: Generate JUnit Report
       run: mvn surefire-report:report-only surefire-report:failsafe-report-only site:site -DgenerateReports=false
@@ -52,4 +57,5 @@ jobs:
       if: ${{ always() }}
       with:
         name: surefire-reports-${{ runner.os }}-jdk${{ matrix.java }}
-        path: '**/target/site'
+        path: |
+          **/target/site

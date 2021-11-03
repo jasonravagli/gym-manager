@@ -14,10 +14,13 @@ public class GymController {
 
 	private GymView gymView;
 	private TransactionManager transactionManager;
-
-	public GymController(GymView gymView, TransactionManager transactionManager) {
-		this.gymView = gymView;
+	
+	public void setTransactionManager(TransactionManager transactionManager) {
 		this.transactionManager = transactionManager;
+	}
+	
+	public void setView(GymView gymView) {
+		this.gymView = gymView;
 	}
 
 	public void allMembers() {

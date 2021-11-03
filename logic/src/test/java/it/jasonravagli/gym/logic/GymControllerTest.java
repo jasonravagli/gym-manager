@@ -14,7 +14,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -43,13 +42,16 @@ public class GymControllerTest {
 	@Mock
 	private RepositoryProvider repositoryProvider;
 
-	@InjectMocks
 	private GymController gymController;
 
 	@Before
 	public void setup() {
 		closeable = MockitoAnnotations.openMocks(this);
-		
+
+		gymController = new GymController();
+		gymController.setTransactionManager(transactionManager);
+		gymController.setView(gymView);
+
 		when(repositoryProvider.getMemberRepository()).thenReturn(memberRepository);
 		when(repositoryProvider.getCourseRepository()).thenReturn(courseRepository);
 	}

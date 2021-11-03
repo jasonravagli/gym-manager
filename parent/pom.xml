@@ -14,9 +14,13 @@
 
 		<domainModel.version>1.2</domainModel.version>
 		<junit.version>4.13.2</junit.version>
-		<assertj.version>3.21.0</assertj.version>
+		<assertj-swing.version>3.17.1</assertj-swing.version>
 		<mockito.version>4.0.0</mockito.version>
 		<mongo.version>3.12.10</mongo.version>
+		<miglayout.version>5.3</miglayout.version>
+		<lgooddatepicker.version>11.2.1</lgooddatepicker.version>
+		<apache-commons-lang.commons>3.12.0</apache-commons-lang.commons>
+		<log4j.version>2.14.1</log4j.version>
 
 		<docker.image.mongo>mongo:5.0.3</docker.image.mongo>
 	</properties>
@@ -40,10 +44,27 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>gui</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>org.mongodb</groupId>
 				<artifactId>mongo-java-driver</artifactId>
 				<version>${mongo.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.miglayout</groupId>
+				<artifactId>miglayout-swing</artifactId>
+				<version>${miglayout.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.lgooddatepicker</groupId>
+				<artifactId>LGoodDatePicker</artifactId>
+				<version>${lgooddatepicker.version}</version>
+			</dependency>
+
 
 			<!-- TEST DEPENDENCIES -->
 			<dependency>
@@ -53,16 +74,29 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.assertj</groupId>
-				<artifactId>assertj-core</artifactId>
-				<version>${assertj.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-core</artifactId>
 				<version>${mockito.version}</version>
 				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-swing-junit</artifactId>
+				<version>${assertj-swing.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${apache-commons-lang.commons}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-bom</artifactId>
+				<version>${log4j.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -74,7 +108,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
+			<artifactId>assertj-swing-junit</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -129,12 +163,13 @@
 							</goals>
 						</execution>
 					</executions>
-					
+
 					<!-- Exclude class without logic from the coverage -->
 					<configuration>
 						<excludes>
 							<exclude>**/TransactionException.*</exclude>
 							<exclude>**/MongoRepositoryProvider.*</exclude>
+							<exclude>**/gui/**/SimpleDocumentListener.*</exclude>
 						</excludes>
 					</configuration>
 				</plugin>
