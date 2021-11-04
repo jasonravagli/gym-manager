@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       workdir: aggregator
+      docker-dir: docker
 
     name: Build with Java 11, Coveralls, and PIT on Linux
     steps:
@@ -30,6 +31,9 @@ jobs:
           ~/.sonar/cache
         key: ${{ runner.os }}-m2-jdk11-${{ hashFiles('**/pom.xml', '**/linux-coveralls.yml') }}
         restore-keys: ${{ runner.os }}-m2-jdk11-
+    - name: Start MongoDB with Docker Compose
+      working-directory: ${{ env.docker-dir }}
+      run: docker compose -f docker-compose-mongo-replicas.yml up -d
     - name: Build with Maven
       run: >
         xvfb-run mvn install -Pcoveralls,pit,sonar
@@ -41,6 +45,9 @@ jobs:
         COVERALLS_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: Stop MongoDB
+      working-directory: ${{ env.docker-dir }}
+      run: docker compose -f docker-compose-mongo-replicas.yml down
     - name: Generate JUnit Report
       run: mvn surefire-report:report-only surefire-report:failsafe-report-only site:site -DgenerateReports=false
       working-directory: ${{ env.workdir }}

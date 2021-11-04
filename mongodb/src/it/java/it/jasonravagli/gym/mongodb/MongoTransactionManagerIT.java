@@ -30,9 +30,7 @@ public class MongoTransactionManagerIT {
 	private static final String MONGO_HOST = "localhost";
 	private static final String MONGO_DATABASE = "test";
 	private static final String MONGO_COLLECTION = "test_collection";
-
-	// Get the docker container mapped port
-	private static int mongoPort = Integer.parseInt(System.getProperty("mongo.port", "27017"));
+	private static final int MONGO_PORT = 27017;
 
 	private AutoCloseable autoCloseable;
 
@@ -49,7 +47,7 @@ public class MongoTransactionManagerIT {
 	public void setup() {
 		autoCloseable = MockitoAnnotations.openMocks(this);
 
-		client = new MongoClient(new ServerAddress(MONGO_HOST, mongoPort));
+		client = new MongoClient(new ServerAddress(MONGO_HOST, MONGO_PORT));
 		clientSession = client.startSession();
 		MongoDatabase database = client.getDatabase(MONGO_DATABASE);
 		// Clean the database

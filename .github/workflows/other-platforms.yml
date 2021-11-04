@@ -40,6 +40,9 @@ jobs:
           !/.m2/repository/it/jasonravagli/gym/**
         key: ${{ runner.os }}-m2-jdk${{ matrix.java }}-${{ hashFiles('**/pom.xml', '**/other-platforms.yml') }}
         restore-keys: ${{ runner.os }}-m2-jdk${{ matrix.java }}-
+    - name: Start MongoDB with Docker Compose
+      working-directory: ${{ env.docker-dir }}
+      run: docker compose -f docker-compose-mongo-replicas.yml up -d
     - name: Build with Maven on ${{ runner.os }}
       if: runner.os != 'Linux'
       run: mvn install
@@ -48,6 +51,9 @@ jobs:
       if: runner.os == 'Linux'
       run: xvfb-run mvn install
       working-directory: ${{ env.workdir }}
+    - name: Stop MongoDB
+      working-directory: ${{ env.docker-dir }}
+      run: docker compose -f docker-compose-mongo-replicas.yml down
     - name: Generate JUnit Report
       run: mvn surefire-report:report-only surefire-report:failsafe-report-only site:site -DgenerateReports=false
       working-directory: ${{ env.workdir }}

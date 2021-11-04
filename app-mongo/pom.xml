@@ -8,28 +8,20 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../parent</relativePath>
 	</parent>
-	<artifactId>gui</artifactId>
+	<artifactId>app-mongo</artifactId>
 
 	<dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>domain-model</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>logic</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.miglayout</groupId>
-			<artifactId>miglayout-swing</artifactId>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>gui</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.github.lgooddatepicker</groupId>
-			<artifactId>LGoodDatePicker</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>mongodb</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -46,8 +38,8 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				<!-- Exclude the module from PIT execution (PIT with AssertJ Swing raises 
-					errors) -->
+				<!-- Exclude the module from PIT execution (it contains only integration 
+					tests) -->
 				<plugin>
 					<groupId>org.pitest</groupId>
 					<artifactId>pitest-maven</artifactId>

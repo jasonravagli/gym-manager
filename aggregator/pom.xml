@@ -15,6 +15,7 @@
 		<module>../logic</module>
 		<module>../mongodb</module>
 		<module>../gui</module>
+		<module>../app-mongo</module>
 	</modules>
 
 	<properties>

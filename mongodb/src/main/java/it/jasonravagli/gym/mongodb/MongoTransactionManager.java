@@ -1,5 +1,8 @@
 package it.jasonravagli.gym.mongodb;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mongodb.MongoException;
 import com.mongodb.client.ClientSession;
 
@@ -9,6 +12,8 @@ import it.jasonravagli.gym.logic.TransactionManager;
 
 public class MongoTransactionManager implements TransactionManager {
 
+	private static final Logger LOGGER = LogManager.getLogger(MongoTransactionManager.class);
+	
 	private ClientSession clientSession;
 	private MongoRepositoryProvider repositoryProvider;
 
@@ -22,6 +27,7 @@ public class MongoTransactionManager implements TransactionManager {
 		try {
 			return clientSession.withTransaction(() -> code.apply(repositoryProvider));
 		} catch (MongoException e) {
+			LOGGER.error(e.getMessage());
 			throw new TransactionException(e.getMessage(), e);
 		}
 	}
