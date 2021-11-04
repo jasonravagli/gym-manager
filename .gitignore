@@ -5,6 +5,3 @@
 
 # Ignore failed GUI tests screenshots
 **/failed-gui-tests/
-
-# Ignore mongo docker volumes data
-**/docker/.data/
