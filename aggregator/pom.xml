@@ -26,7 +26,8 @@
 			**/domain-model/**,
 			**/mongodb/**/MongoRepositoryProvider.java,
 			**/logic/**/TransactionException.java,
-			**/gui/**/SimpleDocumentListener.java
+			**/gui/**/SimpleDocumentListener.java,
+			**/app-mongo/**/MongoGymApp.java
 		</sonar.coverage.exclusions>
 		<sonar.issue.ignore.multicriteria>e11,e12</sonar.issue.ignore.multicriteria>
 

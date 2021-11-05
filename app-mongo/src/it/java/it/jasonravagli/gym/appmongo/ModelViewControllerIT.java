@@ -141,7 +141,7 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
-	public void testUpdateMember() throws InterruptedException {
+	public void testUpdateMemberWhenOperationOk() {
 		Member member = createTestMember("name 1", "surname 1", LocalDate.of(1996, 10, 31));
 		memberRepository.save(member);
 		String updatedName = "new name";
@@ -163,6 +163,27 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 		updatedMember.setSurname(updatedSurname);
 		updatedMember.setDateOfBirth(updatedDateOfBirth);
 		assertThat(memberRepository.findById(member.getId())).isEqualTo(updatedMember);
+	}
+	
+	@Test
+	@GUITest
+	public void testUpdateMemberWhenOperationCanceled() {
+		Member member = createTestMember("name 1", "surname 1", LocalDate.of(1996, 10, 31));
+		memberRepository.save(member);
+		String updatedName = "new name";
+		String updatedSurname = "new surname";
+		LocalDate updatedDateOfBirth = LocalDate.of(1995, 4, 28);
+
+		controller.allMembers();
+		windowGymView.list("listMembers").selectItem(0);
+		windowGymView.button("buttonUpdateMember").click();
+		windowManageMember.textBox("textFieldName").deleteText().enterText(updatedName);
+		windowManageMember.textBox("textFieldSurname").deleteText().enterText(updatedSurname);
+		DatePicker datePicker = (DatePicker) windowManageMember.panel("datePickerBirth").target();
+		GuiActionRunner.execute(() -> datePicker.setDate(updatedDateOfBirth));
+		windowManageMember.button("buttonCancel").click();
+
+		assertThat(memberRepository.findById(member.getId())).isEqualTo(member);
 	}
 
 	@Test
@@ -194,7 +215,7 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
-	public void testUpdateCourse() {
+	public void testUpdateCourseWhenOperationOk() {
 		Course course = createTestCourse("course 1", Collections.emptySet());
 		courseRepository.save(course);
 		String updatedName = "new course";
@@ -211,6 +232,21 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 		updatedCourse.setSubscribers(Collections.emptySet());
 		assertThat(courseRepository.findById(course.getId())).isEqualTo(updatedCourse);
 	}
+	
+	@Test
+	public void testUpdateCourseWhenOperationCanceled() {
+		Course course = createTestCourse("course 1", Collections.emptySet());
+		courseRepository.save(course);
+		String updatedName = "new course";
+
+		windowGymView.tabbedPane("tabbedPaneMain").selectTab("Courses");
+		windowGymView.list("listCourses").selectItem(0);
+		windowGymView.button("buttonUpdateCourse").click();
+		windowManageCourse.textBox("textFieldName").deleteText().enterText(updatedName);
+		windowManageCourse.button("buttonCancel").click();
+
+		assertThat(courseRepository.findById(course.getId())).isEqualTo(course);
+	}
 
 	@Test
 	public void testDeleteCourse() {
@@ -226,7 +262,7 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
-	public void testManageSubs() {
+	public void testManageSubsWhenOperationOk() {
 		Member member = createTestMember("name 1", "surname 1", LocalDate.of(1996, 10, 31));
 		Course course = createTestCourse("course 1", Collections.emptySet());
 		memberRepository.save(member);
@@ -241,6 +277,25 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 
 		Course updatedCourse = courseRepository.findById(course.getId());
 		assertThat(updatedCourse.getSubscribers()).containsExactly(member);
+	}
+	
+	@Test
+	@GUITest
+	public void testManageSubsWhenOperationCanceled() {
+		Member member = createTestMember("name 1", "surname 1", LocalDate.of(1996, 10, 31));
+		Course course = createTestCourse("course 1", Collections.emptySet());
+		memberRepository.save(member);
+		courseRepository.save(course);
+
+		windowGymView.tabbedPane("tabbedPaneMain").selectTab("Courses");
+		windowGymView.list("listCourses").selectItem(0);
+		windowGymView.button("buttonManageSubs").click();
+		windowManageSubs.list("listOtherMembers").selectItem(0);
+		windowManageSubs.button("buttonAddSub").click();
+		windowManageSubs.button("buttonCancel").click();
+
+		Course retrievedCourse = courseRepository.findById(course.getId());
+		assertThat(retrievedCourse.getSubscribers()).isEmpty();
 	}
 
 	private Member createTestMember(String name, String surname, LocalDate dateOfBirth) {
