@@ -29,7 +29,7 @@
 			**/gui/**/SimpleDocumentListener.java,
 			**/app-mongo/**/MongoGymApp.java
 		</sonar.coverage.exclusions>
-		<sonar.issue.ignore.multicriteria>e11,e12</sonar.issue.ignore.multicriteria>
+		<sonar.issue.ignore.multicriteria>e11,e12,e13</sonar.issue.ignore.multicriteria>
 
 		<!-- Disable rule "Tests should include assertions" for GUI Tests (AssertJ 
 			Swing tests does not necessarily perform explicit assertions) -->
@@ -49,6 +49,15 @@
 		<sonar.issue.ignore.multicriteria.e12.resourceKey>
 			**/gui/**/Swing*.java
 		</sonar.issue.ignore.multicriteria.e12.resourceKey>
+
+		<!-- Disable rule "Test classes should comply with a naming convention" 
+			for end to end tests classes (The suffix E2E does not comply the Java convention) -->
+		<sonar.issue.ignore.multicriteria.e13.ruleKey>
+			java:S3577
+		</sonar.issue.ignore.multicriteria.e13.ruleKey>
+		<sonar.issue.ignore.multicriteria.e13.resourceKey>
+			**/*E2E.java
+		</sonar.issue.ignore.multicriteria.e13.resourceKey>
 	</properties>
 
 	<build>

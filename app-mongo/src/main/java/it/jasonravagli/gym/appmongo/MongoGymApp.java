@@ -82,7 +82,7 @@ public class MongoGymApp implements Callable<Void> {
 				
 				gymView.setVisible(true);
 			} catch (Exception e) {
-				LOGGER.error("Application terminated due to exception: " + e.getMessage());
+				LOGGER.error("Application terminated due to exception: {}", e.getMessage());
 			}
 		});
 		return null;
