@@ -3,4 +3,5 @@
 **/*~
 **/.DS_Store
 
+# Ignore failed GUI tests screenshots
 **/failed-gui-tests/

@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       workdir: aggregator
+      docker-dir: docker
 
     name: Build with Java 11, Coveralls, and PIT on Linux
     steps:

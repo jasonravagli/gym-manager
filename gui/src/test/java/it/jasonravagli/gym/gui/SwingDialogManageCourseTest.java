@@ -112,6 +112,7 @@ public class SwingDialogManageCourseTest extends AssertJSwingJUnitTestCase {
 		Course usedCourse = courseCaptor.getValue();
 		assertThat(usedCourse.getId()).isNotNull();
 		assertThat(usedCourse.getName()).isEqualTo(nameWithLeadingSpaces.trim());
+		assertThat(usedCourse.getSubscribers()).isEmpty();
 	}
 
 	@Test
@@ -127,6 +128,7 @@ public class SwingDialogManageCourseTest extends AssertJSwingJUnitTestCase {
 		Course expectedCourse = new Course();
 		expectedCourse.setId(courseToUpdate.getId());
 		expectedCourse.setName(nameWithTrailingSpaces.trim());
+		expectedCourse.setSubscribers(Collections.emptySet());
 		verify(controller).updateCourse(expectedCourse);
 	}
 

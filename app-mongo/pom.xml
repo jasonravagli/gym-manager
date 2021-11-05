@@ -8,46 +8,40 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../parent</relativePath>
 	</parent>
-	<artifactId>gui</artifactId>
+	<artifactId>app-mongo</artifactId>
 
 	<dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>domain-model</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>logic</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.miglayout</groupId>
-			<artifactId>miglayout-swing</artifactId>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>gui</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.github.lgooddatepicker</groupId>
-			<artifactId>LGoodDatePicker</artifactId>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>mongodb</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<pluginManagement>
 			<plugins>
-				<!-- Exclude the module from PIT execution (PIT with AssertJ Swing raises 
-					errors) -->
+				<!-- Exclude the module from PIT execution (it contains only integration 
+					tests) -->
 				<plugin>
 					<groupId>org.pitest</groupId>
 					<artifactId>pitest-maven</artifactId>
@@ -57,5 +51,34 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<archive>
+								<manifest>
+									<mainClass>it.jasonravagli.gym.appmongo.MongoGymApp</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
 	</build>
 </project>
