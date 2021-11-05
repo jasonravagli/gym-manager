@@ -266,7 +266,7 @@
 										<port>27017:27017</port>
 									</ports>
 									<wait>
-										<time>40000</time>
+										<time>60000</time>
 									</wait>
 								</run>
 							</image>
