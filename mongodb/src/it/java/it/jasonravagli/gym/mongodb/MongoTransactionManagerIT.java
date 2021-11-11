@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
@@ -45,14 +44,14 @@ public class MongoTransactionManagerIT {
 
 	@Before
 	public void setup() {
-		autoCloseable = MockitoAnnotations.openMocks(this);
-
 		client = new MongoClient(new ServerAddress(MONGO_HOST, MONGO_PORT));
 		clientSession = client.startSession();
 		MongoDatabase database = client.getDatabase(MONGO_DATABASE);
 		// Clean the database
 		database.drop();
 		testCollection = database.getCollection(MONGO_COLLECTION);
+
+		autoCloseable = MockitoAnnotations.openMocks(this);
 
 		transactionManager = new MongoTransactionManager(clientSession, provider);
 	}
@@ -90,9 +89,9 @@ public class MongoTransactionManagerIT {
 	}
 
 	@Test
-	public void testDoInTransactionWhenCodeThrowMongoExceptionShouldCatchAndThrowCustomException() {
+	public void testDoInTransactionWhenCodeThrowExceptionShouldCatchAndThrowCustomException() {
 		String exceptionMessage = "Exception thrown";
-		MongoException exception = new MongoException(exceptionMessage);
+		Exception exception = new Exception(exceptionMessage);
 		TransactionCode<Void> code = repositoryProvider -> {
 			throw exception;
 		};
@@ -106,7 +105,7 @@ public class MongoTransactionManagerIT {
 		Document doc = new Document("name", "test");
 		TransactionCode<Void> code = repositoryProvider -> {
 			testCollection.insertOne(clientSession, doc);
-			throw new MongoException("Exception thrown");
+			throw new Exception("Exception thrown");
 		};
 
 		try {
@@ -116,6 +115,37 @@ public class MongoTransactionManagerIT {
 		}
 
 		assertThat(readAllDocumentsFromDatabase()).isEmpty();
+	}
+
+	@Test
+	public void testDoInTransactionWhenEverythingOkShouldCommitTransaction() {
+		Document doc = new Document("name", "test");
+		Integer returnValue = 10;
+		TransactionCode<Integer> code = repositoryProvider -> {
+			testCollection.insertOne(doc);
+			return returnValue;
+		};
+
+		transactionManager.doInTransaction(code);
+
+		assertThat(clientSession.hasActiveTransaction()).isFalse();
+	}
+	
+	@Test
+	public void testDoInTransactionWhenCodeThrowExceptionShouldAbortTheTransaction() {
+		Document doc = new Document("name", "test");
+		TransactionCode<Void> code = repositoryProvider -> {
+			testCollection.insertOne(clientSession, doc);
+			throw new Exception("Exception thrown");
+		};
+
+		try {
+			transactionManager.doInTransaction(code);
+		} catch (TransactionException e) {
+
+		}
+
+		assertThat(clientSession.hasActiveTransaction()).isFalse();
 	}
 
 	private List<Document> readAllDocumentsFromDatabase() {

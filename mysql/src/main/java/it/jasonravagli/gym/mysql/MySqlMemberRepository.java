@@ -15,15 +15,17 @@ import it.jasonravagli.gym.model.Member;
 public class MySqlMemberRepository implements MemberRepository {
 
 	private static final String TABLE_NAME = "members";
-	private static final String QUERY_FIND_ALL = "SELECT BIN_TO_UUID(id) as uuid, name, surname, date_of_birth FROM "
+
+	// Query fields are package-private to make them accessible from test classes
+	static final String QUERY_FIND_ALL = "SELECT BIN_TO_UUID(id) as uuid, name, surname, date_of_birth FROM "
 			+ TABLE_NAME + " ORDER BY surname";
-	private static final String QUERY_FIND_BY_ID = "SELECT BIN_TO_UUID(id) as uuid, name, surname, date_of_birth FROM "
+	static final String QUERY_FIND_BY_ID = "SELECT BIN_TO_UUID(id) as uuid, name, surname, date_of_birth FROM "
 			+ TABLE_NAME + " WHERE BIN_TO_UUID(id) = ? ORDER BY surname";
-	private static final String QUERY_INSERT = "INSERT INTO " + TABLE_NAME
+	static final String QUERY_INSERT = "INSERT INTO " + TABLE_NAME
 			+ "(id, name, surname, date_of_birth) VALUES(UUID_TO_BIN(?),?,?,?)";
-	private static final String QUERY_UPDATE = "UPDATE " + TABLE_NAME
+	static final String QUERY_UPDATE = "UPDATE " + TABLE_NAME
 			+ " SET name=?, surname=?, date_of_birth=? WHERE BIN_TO_UUID(id)=?";
-	private static final String QUERY_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE BIN_TO_UUID(id)=?";
+	static final String QUERY_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE BIN_TO_UUID(id)=?";
 
 	private Connection connection;
 
@@ -33,54 +35,75 @@ public class MySqlMemberRepository implements MemberRepository {
 
 	@Override
 	public List<Member> findAll() throws SQLException {
-		PreparedStatement stat = connection.prepareStatement(QUERY_FIND_ALL);
-		ResultSet rs = stat.executeQuery();
+		try (PreparedStatement stat = connection.prepareStatement(QUERY_FIND_ALL)) {
+			ResultSet rs = stat.executeQuery();
 
-		List<Member> members = new ArrayList<>();
-		while (rs.next()) {
-			members.add(createMemberFromResultSet(rs));
+			List<Member> members = new ArrayList<>();
+			while (rs.next()) {
+				members.add(createMemberFromResultSet(rs));
+			}
+			stat.close();
+
+			return members;
+		} catch (SQLException e) {
+			throw e;
 		}
-
-		return members;
 	}
 
 	@Override
 	public void save(Member member) throws SQLException {
-		PreparedStatement stat = connection.prepareStatement(QUERY_INSERT);
-		stat.setString(1, member.getId().toString());
-		stat.setString(2, member.getName());
-		stat.setString(3, member.getSurname());
-		stat.setObject(4, member.getDateOfBirth());
-		stat.executeUpdate();
+		try (PreparedStatement stat = connection.prepareStatement(QUERY_INSERT)) {
+			stat.setString(1, member.getId().toString());
+			stat.setString(2, member.getName());
+			stat.setString(3, member.getSurname());
+			stat.setObject(4, member.getDateOfBirth());
+			stat.executeUpdate();
+			stat.close();
+		} catch (SQLException e) {
+			throw e;
+		}
 	}
 
 	@Override
 	public Member findById(UUID id) throws SQLException {
-		PreparedStatement stat = connection.prepareStatement(QUERY_FIND_BY_ID);
-		stat.setString(1, id.toString());
-		ResultSet rs = stat.executeQuery();
+		try (PreparedStatement stat = connection.prepareStatement(QUERY_FIND_BY_ID)) {
+			stat.setString(1, id.toString());
+			ResultSet rs = stat.executeQuery();
 
-		if (rs.next())
-			return createMemberFromResultSet(rs);
+			Member member = null;
+			if (rs.next())
+				member = createMemberFromResultSet(rs);
+			stat.close();
 
-		return null;
+			return member;
+		} catch (SQLException e) {
+			throw e;
+		}
 	}
 
 	@Override
 	public void deleteById(UUID id) throws SQLException {
-		PreparedStatement stat = connection.prepareStatement(QUERY_DELETE);
-		stat.setString(1, id.toString());
-		stat.executeUpdate();
+		try (PreparedStatement stat = connection.prepareStatement(QUERY_DELETE)) {
+			stat.setString(1, id.toString());
+			stat.executeUpdate();
+			stat.close();
+		} catch (SQLException e) {
+			throw e;
+		}
 	}
 
 	@Override
 	public void update(Member member) throws SQLException {
-		PreparedStatement stat = connection.prepareStatement(QUERY_UPDATE);
-		stat.setString(1, member.getName());
-		stat.setString(2, member.getSurname());
-		stat.setObject(3, member.getDateOfBirth());
-		stat.setString(4, member.getId().toString());
-		stat.executeUpdate();
+		try (PreparedStatement stat = connection.prepareStatement(QUERY_UPDATE)) {
+			stat.setString(1, member.getName());
+			stat.setString(2, member.getSurname());
+			stat.setObject(3, member.getDateOfBirth());
+			stat.setString(4, member.getId().toString());
+			stat.executeUpdate();
+			stat.close();
+		} catch (SQLException e) {
+			throw e;
+		}
 	}
 
 	private Member createMemberFromResultSet(ResultSet rs) throws SQLException {

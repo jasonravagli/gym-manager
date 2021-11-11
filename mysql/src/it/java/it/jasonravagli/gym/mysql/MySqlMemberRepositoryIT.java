@@ -1,6 +1,10 @@
 package it.jasonravagli.gym.mysql;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,6 +19,9 @@ import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import it.jasonravagli.gym.model.Member;
 
@@ -28,7 +35,11 @@ public class MySqlMemberRepositoryIT {
 			+ "(id, name, surname, date_of_birth) VALUES(UUID_TO_BIN(?),?,?,?)";
 	private static final String RETRIEVE_QUERY = "SELECT BIN_TO_UUID(id) as uuid, name, surname, date_of_birth FROM "
 			+ TABLE_MEMBERS;
+	private static final String EXCEPTION_MSG = "An exception occurred";
 
+	AutoCloseable autoCloseable;
+
+	@Spy
 	private Connection connection;
 
 	private MySqlMemberRepository repository;
@@ -39,6 +50,8 @@ public class MySqlMemberRepositoryIT {
 		// Clean the table
 		connection.prepareStatement("DELETE FROM " + TABLE_MEMBERS).executeUpdate();
 
+		autoCloseable = MockitoAnnotations.openMocks(this);
+
 		repository = new MySqlMemberRepository(connection);
 	}
 
@@ -46,6 +59,7 @@ public class MySqlMemberRepositoryIT {
 	public void tearDown() throws Exception {
 		if (connection != null && !connection.isClosed())
 			connection.close();
+		autoCloseable.close();
 	}
 
 	@Test
@@ -104,6 +118,130 @@ public class MySqlMemberRepositoryIT {
 		repository.deleteById(existingMember.getId());
 
 		assertThat(readAllMembersFromDatabase()).isEmpty();
+	}
+
+	// ------ Additional tests to verify that statements are closed (their
+	// implementation is harder and less readable) ------
+
+	@Test
+	public void testFindAllWhenEverythingOkShouldCloseTheStatement() throws SQLException {
+		PreparedStatement stat = connection.prepareStatement(MySqlMemberRepository.QUERY_FIND_ALL);
+		doReturn(stat).when(connection).prepareStatement(MySqlMemberRepository.QUERY_FIND_ALL);
+
+		repository.findAll();
+
+		assertThat(stat.isClosed()).isTrue();
+	}
+
+	@Test
+	public void testFindAllWhenSqlExceptionOccursShouldCatchCloseTheStatementAndPropagateException()
+			throws SQLException {
+		PreparedStatement stat = connection.prepareStatement(MySqlMemberRepository.QUERY_FIND_ALL);
+		stat = Mockito.spy(stat);
+		when(stat.executeQuery()).thenThrow(new SQLException(EXCEPTION_MSG));
+		doReturn(stat).when(connection).prepareStatement(MySqlMemberRepository.QUERY_FIND_ALL);
+
+		assertThatThrownBy(() -> repository.findAll()).isInstanceOf(SQLException.class).hasMessage(EXCEPTION_MSG);
+		assertThat(stat.isClosed()).isTrue();
+	}
+
+	@Test
+	public void testFindByIdWhenEverythingOkShouldCloseTheStatement() throws SQLException {
+		PreparedStatement stat = connection.prepareStatement(MySqlMemberRepository.QUERY_FIND_BY_ID);
+		doReturn(stat).when(connection).prepareStatement(MySqlMemberRepository.QUERY_FIND_BY_ID);
+
+		repository.findById(UUID.randomUUID());
+
+		assertThat(stat.isClosed()).isTrue();
+	}
+
+	@Test
+	public void testFindByIdWhenSqlExceptionOccursShouldCatchCloseTheStatementAndPropagateException()
+			throws SQLException {
+		PreparedStatement stat = connection.prepareStatement(MySqlMemberRepository.QUERY_FIND_BY_ID);
+		stat = Mockito.spy(stat);
+		doThrow(new SQLException(EXCEPTION_MSG)).when(stat).executeQuery();
+		doReturn(stat).when(connection).prepareStatement(MySqlMemberRepository.QUERY_FIND_BY_ID);
+
+		assertThatThrownBy(() -> repository.findById(UUID.randomUUID())).isInstanceOf(SQLException.class).hasMessage(EXCEPTION_MSG);
+		assertThat(stat.isClosed()).isTrue();
+	}
+
+	@Test
+	public void testSaveWhenEverythingOkShouldCloseTheStatement() throws SQLException {
+		PreparedStatement stat = connection.prepareStatement(MySqlMemberRepository.QUERY_INSERT);
+		doReturn(stat).when(connection).prepareStatement(MySqlMemberRepository.QUERY_INSERT);
+		Member member = createTestMember("test-name-1", "test-surname-1", LocalDate.of(1996, 4, 30));
+		
+		repository.save(member);
+
+		assertThat(stat.isClosed()).isTrue();
+	}
+
+	@Test
+	public void testSaveWhenSqlExceptionOccursShouldCatchCloseTheStatementAndPropagateException() throws SQLException {
+		PreparedStatement stat = connection.prepareStatement(MySqlMemberRepository.QUERY_INSERT);
+		stat = Mockito.spy(stat);
+		doThrow(new SQLException(EXCEPTION_MSG)).when(stat).executeUpdate();
+		doReturn(stat).when(connection).prepareStatement(MySqlMemberRepository.QUERY_INSERT);
+		Member member = createTestMember("test-name-1", "test-surname-1", LocalDate.of(1996, 4, 30));
+		
+		assertThatThrownBy(() -> repository.save(member)).isInstanceOf(SQLException.class).hasMessage(EXCEPTION_MSG);
+		assertThat(stat.isClosed()).isTrue();
+	}
+	
+	@Test
+	public void testUpdateWhenEverythingOkShouldCloseTheStatement() throws SQLException {
+		PreparedStatement stat = connection.prepareStatement(MySqlMemberRepository.QUERY_UPDATE);
+		doReturn(stat).when(connection).prepareStatement(MySqlMemberRepository.QUERY_UPDATE);
+		Member existingMember = createTestMember("test-name-1", "test-surname-1", LocalDate.of(1996, 4, 30));
+		insertMemberIntoDb(existingMember);
+		Member updatedMember = createTestMember("updated-name", "updated-surname", LocalDate.of(1996, 10, 31));
+		updatedMember.setId(existingMember.getId());
+
+		repository.update(updatedMember);
+
+		assertThat(stat.isClosed()).isTrue();
+	}
+
+	@Test
+	public void testUpdateWhenSqlExceptionOccursShouldCatchCloseTheStatementAndPropagateException() throws SQLException {
+		PreparedStatement stat = connection.prepareStatement(MySqlMemberRepository.QUERY_UPDATE);
+		stat = Mockito.spy(stat);
+		doThrow(new SQLException(EXCEPTION_MSG)).when(stat).executeUpdate();
+		doReturn(stat).when(connection).prepareStatement(MySqlMemberRepository.QUERY_UPDATE);
+		Member existingMember = createTestMember("test-name-1", "test-surname-1", LocalDate.of(1996, 4, 30));
+		insertMemberIntoDb(existingMember);
+		Member updatedMember = createTestMember("updated-name", "updated-surname", LocalDate.of(1996, 10, 31));
+		updatedMember.setId(existingMember.getId());
+
+		assertThatThrownBy(() -> repository.update(updatedMember)).isInstanceOf(SQLException.class).hasMessage(EXCEPTION_MSG);
+		assertThat(stat.isClosed()).isTrue();
+	}
+	
+	@Test
+	public void testDeleteByIdWhenEverythingOkShouldCloseTheStatement() throws SQLException {
+		PreparedStatement stat = connection.prepareStatement(MySqlMemberRepository.QUERY_DELETE);
+		doReturn(stat).when(connection).prepareStatement(MySqlMemberRepository.QUERY_DELETE);
+		Member existingMember = createTestMember("test-name-1", "test-surname-1", LocalDate.of(1996, 4, 30));
+		insertMemberIntoDb(existingMember);
+
+		repository.deleteById(existingMember.getId());
+
+		assertThat(stat.isClosed()).isTrue();
+	}
+	
+	@Test
+	public void testDeleteByIdWhenSqlExceptionOccursShouldCatchCloseTheStatementAndPropagateException() throws SQLException {
+		PreparedStatement stat = connection.prepareStatement(MySqlMemberRepository.QUERY_DELETE);
+		stat = Mockito.spy(stat);
+		doThrow(new SQLException(EXCEPTION_MSG)).when(stat).executeUpdate();
+		doReturn(stat).when(connection).prepareStatement(MySqlMemberRepository.QUERY_DELETE);
+		Member existingMember = createTestMember("test-name-1", "test-surname-1", LocalDate.of(1996, 4, 30));
+		insertMemberIntoDb(existingMember);
+
+		assertThatThrownBy(() -> repository.deleteById(existingMember.getId())).isInstanceOf(SQLException.class).hasMessage(EXCEPTION_MSG);
+		assertThat(stat.isClosed()).isTrue();
 	}
 
 	// ----- Utility methods -----

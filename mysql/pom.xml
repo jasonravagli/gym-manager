@@ -41,6 +41,8 @@
 	<build>
 		<pluginManagement>
 			<plugins>
+				<!-- Bind the PIT goal to the integration-test phase since they have 
+					been used to implement the module classes -->
 				<plugin>
 					<groupId>org.pitest</groupId>
 					<artifactId>pitest-maven</artifactId>
