@@ -20,7 +20,7 @@ public class MySqlCourseRepository implements CourseRepository {
 	private static final String TABLE_COURSES = "courses";
 	private static final String TABLE_MEMBERS = "members";
 	private static final String TABLE_SUBS = "subscriptions";
-	
+
 	// Query fields are package-private to make them accessible from test classes
 	static final String QUERY_FIND_ALL = "SELECT BIN_TO_UUID(id) as uuid, name FROM " + TABLE_COURSES
 			+ " ORDER BY name";
@@ -46,38 +46,34 @@ public class MySqlCourseRepository implements CourseRepository {
 
 	@Override
 	public List<Course> findAll() throws SQLException {
-		try (PreparedStatement stat = connection.prepareStatement(QUERY_FIND_ALL)) {
-			ResultSet rs = stat.executeQuery();
+		try (PreparedStatement statCourse = connection.prepareStatement(QUERY_FIND_ALL);
+				PreparedStatement statSubs = connection.prepareStatement(QUERY_FIND_SUBS);) {
+			ResultSet rs = statCourse.executeQuery();
 
 			List<Course> courses = new ArrayList<>();
 			while (rs.next()) {
-				Course course = createCourseFromResultSet(rs);
+				Course course = createCourseFromResultSet(rs, statSubs);
 
 				courses.add(course);
 			}
-			stat.close();
 
 			return courses;
-		} catch (SQLException e) {
-			throw e;
 		}
 	}
 
 	@Override
 	public Course findById(UUID idCourse) throws SQLException {
-		try (PreparedStatement stat = connection.prepareStatement(QUERY_FIND_BY_ID)) {
-			stat.setString(1, idCourse.toString());
-			ResultSet rs = stat.executeQuery();
+		try (PreparedStatement statCourse = connection.prepareStatement(QUERY_FIND_BY_ID);
+				PreparedStatement statSubs = connection.prepareStatement(QUERY_FIND_SUBS);) {
+			statCourse.setString(1, idCourse.toString());
+			ResultSet rs = statCourse.executeQuery();
 
 			Course course = null;
 			if (rs.next()) {
-				course = createCourseFromResultSet(rs);
+				course = createCourseFromResultSet(rs, statSubs);
 			}
-			stat.close();
 
 			return course;
-		} catch (SQLException e) {
-			throw e;
 		}
 	}
 
@@ -88,16 +84,12 @@ public class MySqlCourseRepository implements CourseRepository {
 			statInsertCourse.setString(1, course.getId().toString());
 			statInsertCourse.setString(2, course.getName());
 			statInsertCourse.executeUpdate();
-			statInsertCourse.close();
 
 			for (Member member : course.getSubscribers()) {
 				statInsertSub.setString(1, course.getId().toString());
 				statInsertSub.setString(2, member.getId().toString());
 				statInsertSub.executeUpdate();
-				statInsertSub.close();
 			}
-		} catch (SQLException e) {
-			throw e;
 		}
 	}
 
@@ -107,13 +99,9 @@ public class MySqlCourseRepository implements CourseRepository {
 				PreparedStatement statDeleteCourse = connection.prepareStatement(QUERY_DELETE_COURSE);) {
 			statDeleteSubs.setString(1, idCourse.toString());
 			statDeleteSubs.executeUpdate();
-			statDeleteSubs.close();
 
 			statDeleteCourse.setString(1, idCourse.toString());
 			statDeleteCourse.executeUpdate();
-			statDeleteCourse.close();
-		} catch (SQLException e) {
-			throw e;
 		}
 	}
 
@@ -125,7 +113,6 @@ public class MySqlCourseRepository implements CourseRepository {
 			statUpdateCourse.setString(1, updatedCourse.getName());
 			statUpdateCourse.setString(2, updatedCourse.getId().toString());
 			statUpdateCourse.executeUpdate();
-			statUpdateCourse.close();
 
 			statDeleteSubs.setString(1, updatedCourse.getId().toString());
 			statDeleteSubs.executeUpdate();
@@ -134,14 +121,11 @@ public class MySqlCourseRepository implements CourseRepository {
 				statInsertSub.setString(1, updatedCourse.getId().toString());
 				statInsertSub.setString(2, member.getId().toString());
 				statInsertSub.executeUpdate();
-				statInsertSub.close();
 			}
-		} catch (SQLException e) {
-			throw e;
 		}
 	}
 
-	private Course createCourseFromResultSet(ResultSet rs) throws SQLException {
+	private Course createCourseFromResultSet(ResultSet rs, PreparedStatement statSubs) throws SQLException {
 		UUID uuid = UUID.fromString(rs.getString("uuid"));
 		String name = rs.getString("name");
 
@@ -150,7 +134,6 @@ public class MySqlCourseRepository implements CourseRepository {
 		course.setName(name);
 
 		Set<Member> subscribers = new HashSet<>();
-		PreparedStatement statSubs = connection.prepareStatement(QUERY_FIND_SUBS);
 		statSubs.setString(1, course.getId().toString());
 		ResultSet rsSubs = statSubs.executeQuery();
 		while (rsSubs.next()) {

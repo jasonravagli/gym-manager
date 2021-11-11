@@ -42,11 +42,8 @@ public class MySqlMemberRepository implements MemberRepository {
 			while (rs.next()) {
 				members.add(createMemberFromResultSet(rs));
 			}
-			stat.close();
 
 			return members;
-		} catch (SQLException e) {
-			throw e;
 		}
 	}
 
@@ -58,9 +55,6 @@ public class MySqlMemberRepository implements MemberRepository {
 			stat.setString(3, member.getSurname());
 			stat.setObject(4, member.getDateOfBirth());
 			stat.executeUpdate();
-			stat.close();
-		} catch (SQLException e) {
-			throw e;
 		}
 	}
 
@@ -73,11 +67,8 @@ public class MySqlMemberRepository implements MemberRepository {
 			Member member = null;
 			if (rs.next())
 				member = createMemberFromResultSet(rs);
-			stat.close();
 
 			return member;
-		} catch (SQLException e) {
-			throw e;
 		}
 	}
 
@@ -86,9 +77,6 @@ public class MySqlMemberRepository implements MemberRepository {
 		try (PreparedStatement stat = connection.prepareStatement(QUERY_DELETE)) {
 			stat.setString(1, id.toString());
 			stat.executeUpdate();
-			stat.close();
-		} catch (SQLException e) {
-			throw e;
 		}
 	}
 
@@ -100,9 +88,6 @@ public class MySqlMemberRepository implements MemberRepository {
 			stat.setObject(3, member.getDateOfBirth());
 			stat.setString(4, member.getId().toString());
 			stat.executeUpdate();
-			stat.close();
-		} catch (SQLException e) {
-			throw e;
 		}
 	}
 

@@ -202,49 +202,62 @@ public class MySqlCourseRepositoryIT {
 	// implementation is harder and less readable) ------
 
 	@Test
-	public void testFindAllWhenEverythingOkShouldCloseTheStatement() throws SQLException {
-		PreparedStatement stat = connection.prepareStatement(MySqlCourseRepository.QUERY_FIND_ALL);
-		doReturn(stat).when(connection).prepareStatement(MySqlCourseRepository.QUERY_FIND_ALL);
+	public void testFindAllWhenEverythingOkShouldCloseAllStatements() throws SQLException {
+		PreparedStatement statCourse = connection.prepareStatement(MySqlCourseRepository.QUERY_FIND_ALL);
+		doReturn(statCourse).when(connection).prepareStatement(MySqlCourseRepository.QUERY_FIND_ALL);
+		PreparedStatement statSubs = connection.prepareStatement(MySqlCourseRepository.QUERY_FIND_SUBS);
+		doReturn(statSubs).when(connection).prepareStatement(MySqlCourseRepository.QUERY_FIND_SUBS);
 
 		repository.findAll();
 
-		assertThat(stat.isClosed()).isTrue();
+		assertThat(statCourse.isClosed()).isTrue();
+		assertThat(statSubs.isClosed()).isTrue();
 	}
 
 	@Test
-	public void testFindAllWhenSqlExceptionOccursShouldCatchCloseTheStatementAndPropagateException()
+	public void testFindAllWhenSqlExceptionOccursShouldCatchCloseAllStatementsAndPropagateException()
 			throws SQLException {
-		PreparedStatement stat = connection.prepareStatement(MySqlCourseRepository.QUERY_FIND_ALL);
-		stat = Mockito.spy(stat);
-		when(stat.executeQuery()).thenThrow(new SQLException(EXCEPTION_MSG));
-		doReturn(stat).when(connection).prepareStatement(MySqlCourseRepository.QUERY_FIND_ALL);
+		PreparedStatement statCourse = connection.prepareStatement(MySqlCourseRepository.QUERY_FIND_ALL);
+		statCourse = Mockito.spy(statCourse);
+		when(statCourse.executeQuery()).thenThrow(new SQLException(EXCEPTION_MSG));
+		doReturn(statCourse).when(connection).prepareStatement(MySqlCourseRepository.QUERY_FIND_ALL);
+		PreparedStatement statSubs = connection.prepareStatement(MySqlCourseRepository.QUERY_FIND_SUBS);
+		doReturn(statSubs).when(connection).prepareStatement(MySqlCourseRepository.QUERY_FIND_SUBS);
 
 		assertThatThrownBy(() -> repository.findAll()).isInstanceOf(SQLException.class).hasMessage(EXCEPTION_MSG);
-		assertThat(stat.isClosed()).isTrue();
+		assertThat(statCourse.isClosed()).isTrue();
+		assertThat(statSubs.isClosed()).isTrue();
 	}
 
 	@Test
-	public void testFindByIdWhenEverythingOkShouldCloseTheStatement() throws SQLException {
-		PreparedStatement stat = connection.prepareStatement(MySqlCourseRepository.QUERY_FIND_BY_ID);
-		doReturn(stat).when(connection).prepareStatement(MySqlCourseRepository.QUERY_FIND_BY_ID);
+	public void testFindByIdWhenEverythingOkShouldCloseAllStatements() throws SQLException {
+		PreparedStatement statCourse = connection.prepareStatement(MySqlCourseRepository.QUERY_FIND_BY_ID);
+		doReturn(statCourse).when(connection).prepareStatement(MySqlCourseRepository.QUERY_FIND_BY_ID);
+		PreparedStatement statSubs = connection.prepareStatement(MySqlCourseRepository.QUERY_FIND_SUBS);
+		doReturn(statSubs).when(connection).prepareStatement(MySqlCourseRepository.QUERY_FIND_SUBS);
+
 
 		repository.findById(UUID.randomUUID());
 
-		assertThat(stat.isClosed()).isTrue();
+		assertThat(statCourse.isClosed()).isTrue();
+		assertThat(statSubs.isClosed()).isTrue();
 	}
 
 	@Test
 	public void testFindByIdWhenSqlExceptionOccursShouldCatchCloseTheStatementAndPropagateException()
 			throws SQLException {
 		UUID id = UUID.randomUUID();
-		PreparedStatement stat = connection.prepareStatement(MySqlCourseRepository.QUERY_FIND_BY_ID);
-		stat = Mockito.spy(stat);
-		doThrow(new SQLException(EXCEPTION_MSG)).when(stat).executeQuery();
-		doReturn(stat).when(connection).prepareStatement(MySqlCourseRepository.QUERY_FIND_BY_ID);
+		PreparedStatement statCourse = connection.prepareStatement(MySqlCourseRepository.QUERY_FIND_BY_ID);
+		statCourse = Mockito.spy(statCourse);
+		doThrow(new SQLException(EXCEPTION_MSG)).when(statCourse).executeQuery();
+		doReturn(statCourse).when(connection).prepareStatement(MySqlCourseRepository.QUERY_FIND_BY_ID);
+		PreparedStatement statSubs = connection.prepareStatement(MySqlCourseRepository.QUERY_FIND_SUBS);
+		doReturn(statSubs).when(connection).prepareStatement(MySqlCourseRepository.QUERY_FIND_SUBS);
 
 		assertThatThrownBy(() -> repository.findById(id)).isInstanceOf(SQLException.class)
 				.hasMessage(EXCEPTION_MSG);
-		assertThat(stat.isClosed()).isTrue();
+		assertThat(statCourse.isClosed()).isTrue();
+		assertThat(statSubs.isClosed()).isTrue();
 	}
 
 	@Test
