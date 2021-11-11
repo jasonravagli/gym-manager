@@ -116,7 +116,6 @@ public class MySqlCourseRepository implements CourseRepository {
 
 			statDeleteSubs.setString(1, updatedCourse.getId().toString());
 			statDeleteSubs.executeUpdate();
-			statDeleteSubs.close();
 			for (Member member : updatedCourse.getSubscribers()) {
 				statInsertSub.setString(1, updatedCourse.getId().toString());
 				statInsertSub.setString(2, member.getId().toString());
