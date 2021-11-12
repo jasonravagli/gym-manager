@@ -106,8 +106,7 @@
 									<MYSQL_DATABASE>test</MYSQL_DATABASE>
 								</env>
 								<wait>
-									<log>.*mysqld: ready for connections.*port: 3306.*</log>
-									<time>40000</time>
+									<time>30000</time>
 								</wait>
 
 								<volumes>
