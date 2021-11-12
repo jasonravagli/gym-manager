@@ -30,7 +30,7 @@ import picocli.CommandLine.Option;
 
 @Command(mixinStandardHelpOptions = true)
 public class MongoGymApp implements Callable<Void> {
-	
+
 	private static final Logger LOGGER = LogManager.getLogger(MongoGymApp.class);
 	private static final String MONGO_MEMBER_COLLECTION = "members";
 	private static final String MONGO_COURSE_COLLECTION = "courses";
@@ -55,31 +55,34 @@ public class MongoGymApp implements Callable<Void> {
 				MongoClient client = new MongoClient(new ServerAddress(mongoHost, mongoPort));
 				ClientSession clientSession = client.startSession();
 				MongoDatabase database = client.getDatabase(databaseName);
-				
+
 				// Create collections if they do not exist
 				List<String> collectionNames = database.listCollectionNames().into(new ArrayList<>());
-				if(!collectionNames.contains(MONGO_MEMBER_COLLECTION))
+				if (!collectionNames.contains(MONGO_MEMBER_COLLECTION))
 					database.createCollection(MONGO_MEMBER_COLLECTION);
-				if(!collectionNames.contains(MONGO_COURSE_COLLECTION))
+				if (!collectionNames.contains(MONGO_COURSE_COLLECTION))
 					database.createCollection(MONGO_COURSE_COLLECTION);
 				MongoCollection<Document> memberCollection = database.getCollection(MONGO_MEMBER_COLLECTION);
 				MongoCollection<Document> courseCollection = database.getCollection(MONGO_COURSE_COLLECTION);
-				
+
 				MongoMemberRepository memberRepository = new MongoMemberRepository(memberCollection, clientSession);
 				MongoCourseRepository courseRepository = new MongoCourseRepository(courseCollection, clientSession);
-				MongoRepositoryProvider repositoryProvider = new MongoRepositoryProvider(memberRepository, courseRepository);
-				MongoTransactionManager transactionManager = new MongoTransactionManager(clientSession, repositoryProvider);
-				
+				MongoRepositoryProvider repositoryProvider = new MongoRepositoryProvider(memberRepository,
+						courseRepository);
+				MongoTransactionManager transactionManager = new MongoTransactionManager(clientSession,
+						repositoryProvider);
+
 				GymController controller = new GymController();
-				
+
 				SwingDialogManageMember dialogManageMember = new SwingDialogManageMember(controller);
 				SwingDialogManageCourse dialogManageCourse = new SwingDialogManageCourse(controller);
 				SwingDialogManageSubs dialogManageSubs = new SwingDialogManageSubs(controller);
-				SwingGymView gymView = new SwingGymView(controller, dialogManageMember, dialogManageCourse, dialogManageSubs);
-				
+				SwingGymView gymView = new SwingGymView(controller, dialogManageMember, dialogManageCourse,
+						dialogManageSubs);
+
 				controller.setTransactionManager(transactionManager);
 				controller.setView(gymView);
-				
+
 				gymView.setVisible(true);
 			} catch (Exception e) {
 				LOGGER.error("Application terminated due to exception: {}", e.getMessage());
