@@ -17,6 +17,7 @@
 		<module>../gui</module>
 		<module>../app-mongo</module>
 		<module>../mysql</module>
+		<module>../app-mysql</module>
 	</modules>
 
 	<properties>
@@ -29,9 +30,10 @@
 			**/logic/**/TransactionException.java,
 			**/gui/**/SimpleDocumentListener.java,
 			**/app-mongo/**/MongoGymApp.java,
-			**/mysql/**/MySqlRepositoryProvider.java
+			**/mysql/**/MySqlRepositoryProvider.java,
+			**/app-mysql/**/MySqlGymApp.java
 		</sonar.coverage.exclusions>
-		<sonar.issue.ignore.multicriteria>e11,e12,e13,e14,e15</sonar.issue.ignore.multicriteria>
+		<sonar.issue.ignore.multicriteria>e11,e12,e13,e14,e15,e16</sonar.issue.ignore.multicriteria>
 
 		<!-- Disable rule "Tests should include assertions" for GUI Tests (AssertJ 
 			Swing tests does not necessarily perform explicit assertions) -->
@@ -78,6 +80,18 @@
 		<sonar.issue.ignore.multicriteria.e15.resourceKey>
 			**/logic/**/TransactionCode.java
 		</sonar.issue.ignore.multicriteria.e15.resourceKey>
+
+		<!-- Disable rule "Hard-coded credentials are security-sensitive" for the 
+			Main class of the MySQL application. The hard-coded password is intended 
+			for testing and demo purposes. In a production environment the MySQL database 
+			should be secured with a strong password passed to the application through 
+			the command line -->
+		<sonar.issue.ignore.multicriteria.e16.ruleKey>
+			java:S2068
+		</sonar.issue.ignore.multicriteria.e16.ruleKey>
+		<sonar.issue.ignore.multicriteria.e16.resourceKey>
+			**/app-mysql/**/MySqlGymApp.java
+		</sonar.issue.ignore.multicriteria.e16.resourceKey>
 	</properties>
 
 	<build>

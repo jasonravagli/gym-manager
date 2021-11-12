@@ -27,10 +27,8 @@ public class MySqlCourseRepository implements CourseRepository {
 	static final String QUERY_FIND_SUBS = "SELECT BIN_TO_UUID(id) as uuid_member, surname as surname_member, name as name_member, date_of_birth FROM "
 			+ TABLE_SUBS + " as s INNER JOIN " + TABLE_MEMBERS
 			+ " as m ON s.id_member = m.id WHERE BIN_TO_UUID(s.id_course) = ? ORDER BY surname";
-	static final String QUERY_FIND_BY_ID = "SELECT BIN_TO_UUID(c.id) as uuid, c.name as name, BIN_TO_UUID(m.id) as uuid_member, "
-			+ "m.name as name_member, m.surname as surname_member, m.date_of_birth as date_of_birth FROM "
-			+ TABLE_COURSES + " as c INNER JOIN " + TABLE_SUBS + " as s ON c.id = s.id_course INNER JOIN "
-			+ TABLE_MEMBERS + " as m ON s.id_member = m.id WHERE BIN_TO_UUID(c.id) = ?";
+	static final String QUERY_FIND_BY_ID = "SELECT BIN_TO_UUID(id) as uuid, name FROM " + TABLE_COURSES
+			+ " WHERE BIN_TO_UUID(id) = ?";
 	static final String QUERY_INSERT_COURSE = "INSERT INTO " + TABLE_COURSES + "(id, name) VALUES(UUID_TO_BIN(?), ?)";
 	static final String QUERY_INSERT_SUB = "INSERT INTO " + TABLE_SUBS
 			+ "(id_course, id_member) VALUES(UUID_TO_BIN(?), UUID_TO_BIN(?))";

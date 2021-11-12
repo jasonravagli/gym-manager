@@ -26,6 +26,8 @@
 
 		<docker.image.mongo>candis/mongo-replica-set:0.0.2</docker.image.mongo>
 		<docker.image.mysql>mysql/mysql-server:8.0.27</docker.image.mysql>
+		
+		<path.mysql-scripts.src>${project.basedir}/../docker/mysql-scripts</path.mysql-scripts.src>
 	</properties>
 
 
@@ -206,6 +208,7 @@
 							<exclude>**/gui/**/SimpleDocumentListener.*</exclude>
 							<exclude>**/app-mongo/**/MongoGymApp.*</exclude>
 							<exclude>**/mysql/**/MySqlRepositoryProvider.*</exclude>
+							<exclude>**/app-mysql/**/MySqlGymApp.*</exclude>
 						</excludes>
 					</configuration>
 				</plugin>
