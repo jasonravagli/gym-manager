@@ -107,7 +107,7 @@
 								</env>
 								<wait>
 									<log>.*mysqld: ready for connections.*port: 3306.*</log>
-									<time>20000</time>
+									<time>40000</time>
 								</wait>
 
 								<volumes>
