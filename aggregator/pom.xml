@@ -17,6 +17,7 @@
 		<module>../gui</module>
 		<module>../app-mongo</module>
 		<module>../mysql</module>
+		<module>../app-mysql</module>
 	</modules>
 
 	<properties>
@@ -29,7 +30,8 @@
 			**/logic/**/TransactionException.java,
 			**/gui/**/SimpleDocumentListener.java,
 			**/app-mongo/**/MongoGymApp.java,
-			**/mysql/**/MySqlRepositoryProvider.java
+			**/mysql/**/MySqlRepositoryProvider.java,
+			**/app-mysql/**/MySqlGymApp.java
 		</sonar.coverage.exclusions>
 		<sonar.issue.ignore.multicriteria>e11,e12,e13,e14,e15</sonar.issue.ignore.multicriteria>
 

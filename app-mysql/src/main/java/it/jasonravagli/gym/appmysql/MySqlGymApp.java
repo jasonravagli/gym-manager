@@ -25,18 +25,21 @@ import picocli.CommandLine.Option;
 public class MySqlGymApp implements Callable<Void> {
 
 	private static final Logger LOGGER = LogManager.getLogger(MySqlGymApp.class);
-	private static final String CONN_URL = "jdbc:mysql://localhost:3306/test";
-	private static final String USERNAME = "root";
-	private static final String PASSWORD = "password";
 
-	@Option(names = { "--mongo-host" }, description = "MongoDB host address")
-	private String mongoHost = "localhost";
+	@Option(names = { "--mysql-host" }, description = "MySQL host address")
+	private String mysqlHost = "localhost";
 
-	@Option(names = { "--mongo-port" }, description = "MongoDB host port")
-	private int mongoPort = 27017;
+	@Option(names = { "--mysql-port" }, description = "MySQL host port")
+	private int mysqlPort = 3306;
+
+	@Option(names = { "--mysql-user" }, description = "MySQL username")
+	private String mysqlUser = "root";
+	
+	@Option(names = { "--mysql-pwd" }, description = "MySQL password")
+	private String mysqlPassword = "password";
 
 	@Option(names = { "--db-name" }, description = "Database name")
-	private String databaseName = "gym";
+	private String databaseName = "test";
 
 	public static void main(String[] args) {
 		new CommandLine(new MySqlGymApp()).execute(args);
@@ -46,7 +49,8 @@ public class MySqlGymApp implements Callable<Void> {
 	public Void call() throws Exception {
 		EventQueue.invokeLater(() -> {
 			try {
-				Connection connection = DriverManager.getConnection(CONN_URL, USERNAME, PASSWORD);
+				String connectionUrl = "jdbc:mysql://" + mysqlHost + ":" + mysqlPort + "/" + databaseName; 
+				Connection connection = DriverManager.getConnection(connectionUrl, mysqlUser, mysqlPassword);
 
 				MySqlMemberRepository memberRepository = new MySqlMemberRepository(connection);
 				MySqlCourseRepository courseRepository = new MySqlCourseRepository(connection);

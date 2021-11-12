@@ -15,6 +15,7 @@ import it.jasonravagli.gym.model.Member;
 public class MySqlMemberRepository implements MemberRepository {
 
 	private static final String TABLE_NAME = "members";
+	private static final String TABLE_SUBS = "subscriptions";
 
 	// Query fields are package-private to make them accessible from test classes
 	static final String QUERY_FIND_ALL = "SELECT BIN_TO_UUID(id) as uuid, name, surname, date_of_birth FROM "
@@ -25,7 +26,8 @@ public class MySqlMemberRepository implements MemberRepository {
 			+ "(id, name, surname, date_of_birth) VALUES(UUID_TO_BIN(?),?,?,?)";
 	static final String QUERY_UPDATE = "UPDATE " + TABLE_NAME
 			+ " SET name=?, surname=?, date_of_birth=? WHERE BIN_TO_UUID(id)=?";
-	static final String QUERY_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE BIN_TO_UUID(id)=?";
+	static final String QUERY_DELETE_MEMBER = "DELETE FROM " + TABLE_NAME + " WHERE BIN_TO_UUID(id)=?";
+	static final String QUERY_DELETE_SUBS = "DELETE FROM " + TABLE_SUBS + " WHERE BIN_TO_UUID(id_member) = ?";
 
 	private Connection connection;
 
@@ -73,10 +75,14 @@ public class MySqlMemberRepository implements MemberRepository {
 	}
 
 	@Override
-	public void deleteById(UUID id) throws SQLException {
-		try (PreparedStatement stat = connection.prepareStatement(QUERY_DELETE)) {
-			stat.setString(1, id.toString());
-			stat.executeUpdate();
+	public void deleteById(UUID idMember) throws SQLException {
+		try (PreparedStatement statDeleteSubs = connection.prepareStatement(QUERY_DELETE_SUBS);
+				PreparedStatement statDeleteMember = connection.prepareStatement(QUERY_DELETE_MEMBER);) {
+			statDeleteSubs.setString(1, idMember.toString());
+			statDeleteSubs.executeUpdate();
+			
+			statDeleteMember.setString(1, idMember.toString());
+			statDeleteMember.executeUpdate();
 		}
 	}
 
