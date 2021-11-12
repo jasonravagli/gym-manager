@@ -8,7 +8,12 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../parent</relativePath>
 	</parent>
-	<artifactId>mongodb</artifactId>
+	<artifactId>mysql</artifactId>
+
+	<properties>
+		<path.mysql-scripts.src>${project.basedir}/../docker/mysql-scripts</path.mysql-scripts.src>
+		<path.mysql-scripts.dest>/private/docker/mysql-scripts</path.mysql-scripts.dest>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -20,8 +25,8 @@
 			<artifactId>logic</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongo-java-driver</artifactId>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -51,10 +56,10 @@
 						</execution>
 					</executions>
 					<configuration>
-						<!-- Exclude MongoRepositoryProvider (it contains no logic and there 
+						<!-- Exclude MySqlRepositoryProvider (it contains no logic and there 
 							are no tests for it) -->
 						<excludedClasses>
-							<param>it.jasonravagli.gym.mongodb.MongoRepositoryProvider</param>
+							<param>it.jasonravagli.gym.mysql.MySqlRepositoryProvider</param>
 						</excludedClasses>
 						<!-- Disable the threshold since the module contains only integration 
 							tests and database would not be shut down in case of failures -->
@@ -90,14 +95,26 @@
 				<configuration>
 					<images>
 						<image>
-							<name>${docker.image.mongo}</name>
+							<name>${docker.image.mysql}</name>
 							<run>
 								<ports>
-									<port>27017:27017</port>
+									<port>3306:3306</port>
 								</ports>
+								<env>
+									<MYSQL_ROOT_PASSWORD>password</MYSQL_ROOT_PASSWORD>
+									<MYSQL_ROOT_HOST>%</MYSQL_ROOT_HOST>
+									<MYSQL_DATABASE>test</MYSQL_DATABASE>
+								</env>
 								<wait>
-									<time>60000</time>
+									<log>.*mysqld: ready for connections.*port: 3306.*</log>
+									<time>30000</time>
 								</wait>
+
+								<volumes>
+									<bind>
+										<volume>${path.mysql-scripts.src}:/docker-entrypoint-initdb.d</volume>
+									</bind>
+								</volumes>
 							</run>
 						</image>
 					</images>

@@ -16,6 +16,7 @@
 		<module>../mongodb</module>
 		<module>../gui</module>
 		<module>../app-mongo</module>
+		<module>../mysql</module>
 	</modules>
 
 	<properties>
@@ -27,9 +28,10 @@
 			**/mongodb/**/MongoRepositoryProvider.java,
 			**/logic/**/TransactionException.java,
 			**/gui/**/SimpleDocumentListener.java,
-			**/app-mongo/**/MongoGymApp.java
+			**/app-mongo/**/MongoGymApp.java,
+			**/mysql/**/MySqlRepositoryProvider.java
 		</sonar.coverage.exclusions>
-		<sonar.issue.ignore.multicriteria>e11,e12,e13</sonar.issue.ignore.multicriteria>
+		<sonar.issue.ignore.multicriteria>e11,e12,e13,e14,e15</sonar.issue.ignore.multicriteria>
 
 		<!-- Disable rule "Tests should include assertions" for GUI Tests (AssertJ 
 			Swing tests does not necessarily perform explicit assertions) -->
@@ -58,6 +60,24 @@
 		<sonar.issue.ignore.multicriteria.e13.resourceKey>
 			**/*E2E.java
 		</sonar.issue.ignore.multicriteria.e13.resourceKey>
+
+		<!-- Disable rule "Generic exceptions should never be thrown" for Repository 
+			and TransactioCode interfaces. The implementations of this interfaces should 
+			not take care of catching and handling exception. This is responsibility 
+			of the TransactionManager that uses this components: it catches generic exceptions, 
+			handles them and throws custom exceptions -->
+		<sonar.issue.ignore.multicriteria.e14.ruleKey>
+			java:S112
+		</sonar.issue.ignore.multicriteria.e14.ruleKey>
+		<sonar.issue.ignore.multicriteria.e14.resourceKey>
+			**/logic/**/*Repository.java
+		</sonar.issue.ignore.multicriteria.e14.resourceKey>
+		<sonar.issue.ignore.multicriteria.e15.ruleKey>
+			java:S112
+		</sonar.issue.ignore.multicriteria.e15.ruleKey>
+		<sonar.issue.ignore.multicriteria.e15.resourceKey>
+			**/logic/**/TransactionCode.java
+		</sonar.issue.ignore.multicriteria.e15.resourceKey>
 	</properties>
 
 	<build>
