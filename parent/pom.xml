@@ -27,7 +27,7 @@
 		<docker.image.mongo>candis/mongo-replica-set:0.0.2</docker.image.mongo>
 		<docker.image.mysql>mysql/mysql-server:8.0.27</docker.image.mysql>
 		
-		<path.mysql-scripts.src>${project.basedir}/../docker/mysql-scripts</path.mysql-scripts.src>
+		<path.mysql-scripts.src>${project.basedir}/../docker/composemysql-scripts</path.mysql-scripts.src>
 	</properties>
 
 
