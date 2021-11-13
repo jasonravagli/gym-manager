@@ -91,9 +91,9 @@ public class MySqlAppE2E extends AssertJSwingJUnitTestCase {
 		Course course = createTestCourse(COURSE_1_NAME, Stream.of(member2).collect(Collectors.toSet()));
 		insertCourseIntoDb(course);
 
-		// Start the application
+		// Start the application (use the default password by not specifying the mysql-pwd argument)
 		application("it.jasonravagli.gym.appmysql.MySqlGymApp").withArgs("--mysql-host=" + HOST,
-				"--mysql-port=" + PORT, "--mysql-user=" + USERNAME, "--mysql-pwd=" + PASSWORD, "--db-name=" + DATABASE)
+				"--mysql-port=" + PORT, "--mysql-user=" + USERNAME, "--db-name=" + DATABASE)
 				.start();
 
 		// Connect to the application JFrame
