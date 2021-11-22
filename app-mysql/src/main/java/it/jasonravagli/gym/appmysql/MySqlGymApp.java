@@ -35,11 +35,14 @@ public class MySqlGymApp implements Callable<Void> {
 	@Option(names = { "--mysql-user" }, description = "MySQL username")
 	private String mysqlUser = "root";
 	
-	@Option(names = { "--mysql-pwd" }, description = "MySQL password")
-	private String mysqlPassword = "password";
+	@Option(names = { "--mysql-pwd" }, description = "Boolean flag. When it is true the user will be asked for the MySQL user password")
+	private boolean inputPassword = false;
 
 	@Option(names = { "--db-name" }, description = "Database name")
 	private String databaseName = "test";
+	
+	// Default password. The user can overwrite it using the console when mysql-pwd is true
+	private String mysqlPassword = "password";
 
 	public static void main(String[] args) {
 		new CommandLine(new MySqlGymApp()).execute(args);
@@ -47,6 +50,10 @@ public class MySqlGymApp implements Callable<Void> {
 
 	@Override
 	public Void call() throws Exception {
+		if(inputPassword) {
+			LOGGER.info("User password: ");
+			mysqlPassword = new String(System.console().readPassword());
+		}
 		EventQueue.invokeLater(() -> {
 			try {
 				String connectionUrl = "jdbc:mysql://" + mysqlHost + ":" + mysqlPort + "/" + databaseName; 

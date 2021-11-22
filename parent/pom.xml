@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.jasonravagli.gym</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -206,9 +206,9 @@
 							<exclude>**/TransactionException.*</exclude>
 							<exclude>**/MongoRepositoryProvider.*</exclude>
 							<exclude>**/gui/**/SimpleDocumentListener.*</exclude>
-							<exclude>**/app-mongo/**/MongoGymApp.*</exclude>
+							<exclude>**/MongoGymApp.*</exclude>
 							<exclude>**/mysql/**/MySqlRepositoryProvider.*</exclude>
-							<exclude>**/app-mysql/**/MySqlGymApp.*</exclude>
+							<exclude>**/MySqlGymApp.*</exclude>
 						</excludes>
 					</configuration>
 				</plugin>
