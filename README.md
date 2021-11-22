@@ -20,7 +20,7 @@ _(**) On the early stages of development the project was successfully tested on 
 ## Build replication
 The project can be completely tested and built by running the following Maven commands from the _aggregator_ directory:
 
-`mvn clean install -Pjacoco,pit`
+`mvn clean verify -Pjacoco,pit`
 
 `jacoco` and `pit` profiles are optional. When activated will generate the code coverage and mutation testing reports inside each module folder. With the `jacoco` profile activated an aggregated report about code coverage will be generated inside the _report_ module.
 
@@ -34,7 +34,7 @@ For a quick demo execution you can start and set up the MongoDB Docker container
 
 `mvn docker:start`
 
-Then if you simply run the jar the application will start and connect to the MySQL container.
+Then if you simply run the jar the application will start and connect to the MongoDB container.
 
 If you already have your MongoDB database you can tell the application to connect to it by specifying additional arguments from the command line.
 A complete view of the available arguments is provided specifying `--help` at the moment of execution:
