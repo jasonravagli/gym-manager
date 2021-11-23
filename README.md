@@ -1,5 +1,9 @@
 # Gym Administration System
 
+[![CI with Maven, Coveralls, and PIT on Linux](https://github.com/jasonravagli/gym-manager/actions/workflows/linux-coveralls.yml/badge.svg)](https://github.com/jasonravagli/gym-manager/actions/workflows/linux-coveralls.yml)
+[![CI with Maven and Java 8 on Linux](https://github.com/jasonravagli/gym-manager/actions/workflows/other-platforms.yml/badge.svg)](https://github.com/jasonravagli/gym-manager/actions/workflows/other-platforms.yml)
+
+
 [![Coverage Status](https://coveralls.io/repos/github/jasonravagli/gym-manager/badge.svg?branch=master)](https://coveralls.io/github/jasonravagli/gym-manager?branch=master)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jasonravagli_gym-manager&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=jasonravagli_gym-manager)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=jasonravagli_gym-manager&metric=bugs)](https://sonarcloud.io/summary/new_code?id=jasonravagli_gym-manager)
