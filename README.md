@@ -1,4 +1,11 @@
 # Gym Administration System
+
+[![Coverage Status](https://coveralls.io/repos/github/jasonravagli/gym-manager/badge.svg?branch=master)](https://coveralls.io/github/jasonravagli/gym-manager?branch=master)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jasonravagli_gym-manager&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=jasonravagli_gym-manager)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=jasonravagli_gym-manager&metric=bugs)](https://sonarcloud.io/summary/new_code?id=jasonravagli_gym-manager)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=jasonravagli_gym-manager&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=jasonravagli_gym-manager)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=jasonravagli_gym-manager&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=jasonravagli_gym-manager)
+
 The final project for the course of **Advanced Programming Techniques** taught by professor Bettini at the Università degli Studi di Firenze.
 
 It is a simplified adiministration system for a gym, **developed in Java using TDD, AssertJ, PIT, JaCoCo, Coveralls, Docker and GitHub Actions**. The system allows to manage gym courses, gym members and member subscriptions to courses.
