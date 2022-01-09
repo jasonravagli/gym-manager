@@ -22,11 +22,11 @@ The following table show the compatibility with the considered OSes and Java ver
 |--|--|--|
 | Ubuntu 20.04 | Java 8 and 11 | YES |
 | Mac OS 11 | Java 8 and 11 | YES (*) |
-| Windows 10 | Java 8 and 11 | Partially (**) |
+| Windows 10 | Java 8 and 11 | YES (**) |
 
 _(*) The project was developed and tested locally on a MacOS 11 system. However when building remotely on a MacOS 11 virtual system with GitHub Actions the integration tests were not able to connect to the MySQL Docker container. After some research, we decided to exclude MacOS from the CI build._
 
-_(**) On the early stages of development the project was successfully tested on a Windows 10 system. However the MongoDB Docker image required by the application is not available for Windows. MongoDB transactions require a cluster with at least 3 nodes that support replicas. Manually creating such a cluster was beyond the scope of the project, hence we used an already-built Docker image available only for Unix._
+_(**) The MongoDB Docker image required by the application is not available for Windows. MongoDB transactions require a cluster with at least 3 nodes that support replicas. Manually creating such a cluster was beyond the scope of the project, hence we used an already-built Docker image available only for Unix. The image works fine on Windows system where WSL2 is installed and Docker is configured to use it. Windows environments in GitHub Actions do not support WSL2, so the CI process does not include builds on this OS. However, the project has been successfully tested on a local Windows machine._
 
 ## Build replication
 The project can be completely tested and built by running the following Maven commands from the _aggregator_ directory:
